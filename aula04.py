@@ -10,7 +10,7 @@ CONFIG_MODELOS = {  'OpenAI': {'modelos': ['gpt-4o-mini', 'gpt-4o']}
 
 MEMORIA = ConversationBufferMemory()
 MEMORIA.chat_memory.add_user_message('Ola IA')
-MEMORIA.chat_memory.add_user_message('Olá usuario')
+MEMORIA.chat_memory.add_ai_message('Olá usuario')
 
 def pagina_chat():
     st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')

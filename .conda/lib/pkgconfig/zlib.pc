@@ -1,0 +1,13 @@
+prefix=/home/jonhselmo/ambiente_virtual/assitenteCaojuri/.conda
+exec_prefix=/home/jonhselmo/ambiente_virtual/assitenteCaojuri/.conda
+libdir=/home/jonhselmo/ambiente_virtual/assitenteCaojuri/.conda/lib
+sharedlibdir=/home/jonhselmo/ambiente_virtual/assitenteCaojuri/.conda/lib
+includedir=/home/jonhselmo/ambiente_virtual/assitenteCaojuri/.conda/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

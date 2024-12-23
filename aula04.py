@@ -1,4 +1,5 @@
 import streamlit as st
+from langchain.memory import ConversationBufferMemory
 
 
 TIPOS_ARQUIVOS = ['Site', 'Youtube', 'pdf', 'csv', 'txt']

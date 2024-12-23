@@ -8,18 +8,22 @@ CONFIG_MODELOS = {  'OpenAI': {'modelos': ['gpt-4o-mini', 'gpt-4o']}
 
 }
 
+MEMORIA = ConversationBufferMemory()
+MEMORIA.chat_memory.add_user_message('Ola IA')
+MEMORIA.chat_memory.add_user_message('Olá usuario')
+
 def pagina_chat():
     st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')
 
-    mensagens = st.session_state.get('mensagens', [])
-    for mensagem in mensagens:
-        chat = st.chat_message(mensagem[0])
-        chat.markdown(mensagem[1])
+    memoria = st.session_state.get('memoria', MEMORIA)
+    for mensagem in memoria.buffer_as_messages:
+        chat = st.chat_message(mensagem.type)
+        chat.markdown(mensagem.content)
 
     input_usuario = st.chat_input('Fale com o Assistente!')
     if input_usuario:
-        mensagens.append(('user', input_usuario))
-        st.session_state['mensagens'] = mensagens
+        memoria.chat_memory.add_user_message( input_usuario)
+        st.session_state['memoria'] = memoria
         st._rerun()
         
 def sidebar():

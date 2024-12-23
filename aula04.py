@@ -1,20 +1,29 @@
 import streamlit as st
 from langchain.memory import ConversationBufferMemory
 
+from langchain_openai import ChatOpenAI
+
 
 TIPOS_ARQUIVOS = ['Site', 'Youtube', 'pdf', 'csv', 'txt']
 
-CONFIG_MODELOS = {  'OpenAI': {'modelos': ['gpt-4o-mini', 'gpt-4o']}
+CONFIG_MODELOS = {  'OpenAI': 
+                            {'modelos': ['gpt-4o-mini', 'gpt-4o'],
+                            'chat': ChatOpenAI}
+
 
 }
 
 MEMORIA = ConversationBufferMemory()
-MEMORIA.chat_memory.add_user_message('Ola IA')
-MEMORIA.chat_memory.add_ai_message('Olá usuario')
+
+def carrega_modelo(provedor, modelo, api_key):
+    chat = CONFIG_MODELOS[provedor]['chat'](model=modelo, api_key=api_key)
+    st.session_state['chat'] = chat
+
 
 def pagina_chat():
     st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')
 
+    chat_model = st.session_state.get('chat')
     memoria = st.session_state.get('memoria', MEMORIA)
     for mensagem in memoria.buffer_as_messages:
         chat = st.chat_message(mensagem.type)
@@ -22,9 +31,16 @@ def pagina_chat():
 
     input_usuario = st.chat_input('Fale com o Assistente!')
     if input_usuario:
-        memoria.chat_memory.add_user_message( input_usuario)
+        memoria.chat_memory.add_user_message(input_usuario)
+        chat = st.chat_message('human')
+        chat.markdown(input_usuario)
+
+        chat = st.chat_message('ai')
+        resposta = chat.write_stream(chat_model.stream(input_usuario))
+        #resposta = chat_model.invoke(input_usuario).content
+        memoria.chat_memory.add_ai_message(resposta)
         st.session_state['memoria'] = memoria
-        st._rerun()
+        #st._rerun()
         
 def sidebar():
     tabs_assistente = st.tabs(['Uploads de Arquivos', 'Modelo de IA'])
@@ -49,6 +65,10 @@ def sidebar():
             value=st.session_state.get(f'api_key_{provedor}')
         )
         st.session_state[f'api_key_{provedor}'] = api_key
+
+
+    if st.button('Iniciar o Assistente'):
+        carrega_modelo(provedor, modelo, api_key)
 
 def main():
     pagina_chat()

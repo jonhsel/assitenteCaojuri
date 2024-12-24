@@ -1,4 +1,5 @@
 import streamlit as st
+import tempfile
 from langchain.memory import ConversationBufferMemory
 
 from langchain_openai import ChatOpenAI
@@ -18,8 +19,35 @@ CONFIG_MODELOS = {  'OpenAI':
 MEMORIA = ConversationBufferMemory()
 
 def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
+
+    if tipo_arquivo == 'Site':
+        documento = carrega_site(arquivo)
+
+    if tipo_arquivo == 'Youtube':
+        documento = carrega_youtube(arquivo)
+
+    if tipo_arquivo == 'pdf':
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp:
+            temp.write(arquivo.read())
+            nome_temp = temp.name
+        documento = carrega_pdf(nome_temp)
+
+    if tipo_arquivo == 'csv':
+        with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as temp:
+            temp.write(arquivo.read())
+            nome_temp = temp.name
+        documento = carrega_csv(nome_temp)
+
+    if tipo_arquivo == 'txt':
+        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp:
+            temp.write(arquivo.read())
+            nome_temp = temp.name
+        documento = carrega_txt(nome_temp)
+
     chat = CONFIG_MODELOS[provedor]['chat'](model=modelo, api_key=api_key)
     st.session_state['chat'] = chat
+
+
 
 
 def pagina_chat():

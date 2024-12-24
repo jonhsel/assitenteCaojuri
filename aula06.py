@@ -3,6 +3,8 @@ from langchain.memory import ConversationBufferMemory
 
 from langchain_openai import ChatOpenAI
 
+from loaders import *
+
 
 TIPOS_ARQUIVOS = ['Site', 'Youtube', 'pdf', 'csv', 'txt']
 
@@ -15,7 +17,7 @@ CONFIG_MODELOS = {  'OpenAI':
 
 MEMORIA = ConversationBufferMemory()
 
-def carrega_modelo(provedor, modelo, api_key):
+def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     chat = CONFIG_MODELOS[provedor]['chat'](model=modelo, api_key=api_key)
     st.session_state['chat'] = chat
 
@@ -68,7 +70,7 @@ def sidebar():
 
 
     if st.button('Iniciar o Assistente'):
-        carrega_modelo(provedor, modelo, api_key)
+        carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
 
 def main():
     pagina_chat()

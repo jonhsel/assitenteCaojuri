@@ -79,7 +79,10 @@ def pagina_chat():
     st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')
 
     chain = st.session_state.get('chain')
-    
+    if chain is None:
+        st.error('Inicializar o assitente')
+        st.stop
+
     memoria = st.session_state.get('memoria', MEMORIA)
     for mensagem in memoria.buffer_as_messages:
         chat = st.chat_message(mensagem.type)

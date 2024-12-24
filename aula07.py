@@ -20,7 +20,7 @@ CONFIG_MODELOS = {  'OpenAI':
 
 MEMORIA = ConversationBufferMemory()
 
-def carrega_arquivo (tipo_arquivo, documento):
+def carrega_arquivo (tipo_arquivo, arquivo):
     if tipo_arquivo == 'Site':
         documento = carrega_site(arquivo)
 
@@ -48,7 +48,7 @@ def carrega_arquivo (tipo_arquivo, documento):
 
 def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
-    documento = carrega_arquivo(tipo_arquivo, documento)
+    documento = carrega_arquivo(tipo_arquivo, arquivo)
 
     system_message = ''' Você é um assistente técnico chamado 'assistente do Jonh Selmo'.
     Você possui acesso às seguintes informações vindas de um documento{}:
@@ -81,7 +81,7 @@ def pagina_chat():
     chain = st.session_state.get('chain')
     if chain is None:
         st.error('Inicializar o assitente')
-        st.stop
+        st.stop()
 
     memoria = st.session_state.get('memoria', MEMORIA)
     for mensagem in memoria.buffer_as_messages:

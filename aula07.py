@@ -133,9 +133,9 @@ def sidebar():
         carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
 
 def main():
-    pagina_chat()
+    
     with st.sidebar:
         sidebar()
-
+    pagina_chat()
 if __name__=='__main__':
     main()

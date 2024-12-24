@@ -69,7 +69,8 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     ])
 
     chat = CONFIG_MODELOS[provedor]['chat'](model=modelo, api_key=api_key)
-    st.session_state['chat'] = chat
+    chain = template | chat
+    st.session_state['chain'] = chain
 
 
 
@@ -77,7 +78,8 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 def pagina_chat():
     st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')
 
-    chat_model = st.session_state.get('chat')
+    chain = st.session_state.get('chain')
+    
     memoria = st.session_state.get('memoria', MEMORIA)
     for mensagem in memoria.buffer_as_messages:
         chat = st.chat_message(mensagem.type)
@@ -90,7 +92,10 @@ def pagina_chat():
         chat.markdown(input_usuario)
 
         chat = st.chat_message('ai')
-        resposta = chat.write_stream(chat_model.stream(input_usuario))
+        resposta = chat.write_stream(chain.stream({
+            'input': input_usuario,
+            'chat_history': memoria.buffer_as_messages
+            }))
         #resposta = chat_model.invoke(input_usuario).content
         memoria.chat_memory.add_ai_message(resposta)
         st.session_state['memoria'] = memoria

@@ -33,6 +33,9 @@ MEMORIA = ConversationBufferMemory()
 def carrega_arquivo (tipo_arquivo, arquivo):
     if tipo_arquivo == 'Site':
         documento = carrega_site(arquivo)
+        if documento is None:
+            st.error('Inicializar o documento')
+            st.stop()
 
     if tipo_arquivo == 'Youtube':
         documento = carrega_youtube(arquivo)
@@ -54,9 +57,7 @@ def carrega_arquivo (tipo_arquivo, arquivo):
             temp.write(arquivo.read())
             nome_temp = temp.name
         documento = carrega_txt(nome_temp)
-    if documento is None:
-        st.error('Inicializar o documento')
-        st.stop()
+    
     return documento
 
 def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):

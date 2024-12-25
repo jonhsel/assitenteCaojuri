@@ -23,8 +23,21 @@ div.stAlert {
 p {
     font-size: 14pt;
     
+    
 }
 
 textarea{
     font-size: 14pt;
+}
+
+div.st-emotion-cache-1c7y2kd{
+    background-color: rgba(250, 210, 210, 0.5);
+}
+
+div.st-emotion-cache-bho8sy{
+    background-color: rgb(5, 50, 169);
+}
+
+div.stChatMessage.st-emotion-cache-4oy321.eeusbqq4 {
+    background-color: rgb(230, 240, 250);
 }

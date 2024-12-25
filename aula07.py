@@ -8,6 +8,13 @@ from loaders import *
 
 from langchain.prompts import ChatPromptTemplate
 
+#===============
+#CSS
+
+with open('style.css') as f:
+   st.markdown(f'<style>{f.read()}</style', unsafe_allow_html=True)
+
+#################
 
 TIPOS_ARQUIVOS = ['Site', 'Youtube', 'pdf', 'csv', 'txt']
 

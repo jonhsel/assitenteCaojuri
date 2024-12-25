@@ -1,0 +1,30 @@
+span.css-10trblm.e1nzilvr0 {
+    background-color: #f8f9fb;
+    color: #100530;
+    border: 3px solid #ecebee;
+    padding: 5% 5% 5% 10%;
+    border-radius: 10px;
+    text-align: justify;
+}
+
+div.css-1om1ktf.ezh4s2r0 {
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    font-size: 14pt;
+}
+
+div.stAlert {
+    font-size: 12pt;
+    color: #ff0000;  
+    border: 2px solid #552fa1;
+    border-radius: 10px;
+}
+
+p {
+    font-size: 14pt;
+    
+}
+
+textarea{
+    font-size: 14pt;
+}

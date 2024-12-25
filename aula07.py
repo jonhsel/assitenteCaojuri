@@ -132,6 +132,9 @@ def sidebar():
     if st.button('Iniciar o Assistente'):
         carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
 
+    if st.button('Limpar o histórico de conversação'):
+        st.session_st['memoria'] = MEMORIA
+
 def main():
     
     with st.sidebar:

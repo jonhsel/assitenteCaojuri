@@ -133,7 +133,7 @@ def sidebar():
         carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
 
     if st.button('Limpar o histórico de conversação'):
-        st.session_st['memoria'] = MEMORIA
+        st.session_state['memoria'] = MEMORIA
 
 def main():
     

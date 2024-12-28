@@ -19,7 +19,7 @@ with open('style.css') as f:
 st.image('images/juria.png')
 
 
-TIPOS_ARQUIVOS = ['Site', 'Youtube', 'pdf', 'csv', 'txt']
+TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt']
 
 CONFIG_MODELOS = {  'OpenAI': 
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
@@ -43,19 +43,19 @@ def carrega_arquivo (tipo_arquivo, arquivo):
     if tipo_arquivo == 'Youtube':
         documento = carrega_youtube(arquivo)
 
-    if tipo_arquivo == 'pdf':
+    if tipo_arquivo == 'Arquivos .pdf':
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp:
             temp.write(arquivo.read())
             nome_temp = temp.name
         documento = carrega_pdf(nome_temp)
 
-    if tipo_arquivo == 'csv':
+    if tipo_arquivo == 'Arquivos .csv':
         with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as temp:
             temp.write(arquivo.read())
             nome_temp = temp.name
         documento = carrega_csv(nome_temp)
 
-    if tipo_arquivo == 'txt':
+    if tipo_arquivo == 'Arquivos .txt':
         with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp:
             temp.write(arquivo.read())
             nome_temp = temp.name
@@ -95,11 +95,12 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
 
 def pagina_chat():
-    st.header('⚖️ Assistente do Jonh Selmo - CAOJÚRI')
+    st.header('⚖️ Assistente Virtual - CAOJÚRI')
 
     chain = st.session_state.get('chain')
     if chain is None:
-        st.error('Inicializar o assitente')
+        st.error('1 - Carrgue o arquivo \n'+
+                 '2 - Inicialize o assitente')
         st.stop()
 
     memoria = st.session_state.get('memoria', MEMORIA)
@@ -131,11 +132,11 @@ def sidebar():
             arquivo = st.text_input('Digite a URL do site')
         if tipo_arquivo == 'Youtube':
             arquivo = st.text_input('Digite a URL do Youtube')
-        if tipo_arquivo == 'pdf':
+        if tipo_arquivo == 'Arquivos .pdf':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .pdf', type=['.pdf'])
-        if tipo_arquivo == 'csv':
+        if tipo_arquivo == 'Arquivos .csv':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .csv', type=['.csv'])
-        if tipo_arquivo == 'txt':
+        if tipo_arquivo == 'Arquivos .txt':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'])
         
     with tabs_assistente[1]:

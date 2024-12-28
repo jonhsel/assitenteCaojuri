@@ -97,7 +97,7 @@ def pagina_chat():
 
     chain = st.session_state.get('chain')
     if chain is None:
-        st.error('⚠️ Carrgue o arquivo ou digite a url/id antes de inicializar o assistente!')
+        st.error('⚠️ Carregue o arquivo ou digite a url/id antes de inicializar o assistente!')
         st.stop()
 
     memoria = st.session_state.get('memoria', MEMORIA)

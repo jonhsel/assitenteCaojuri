@@ -26,7 +26,7 @@ CONFIG_MODELOS = {  'OpenAI':
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
                             'chat': ChatOpenAI},
                     'Anthropic':
-                            {'modelos':['claude-3-haiku','claude-3-sonnet-20240229'],
+                            {'modelos':['claude-3-haiku-20240307','claude-3-sonnet-20240229'],
                              'chat':ChatAnthropic}
 
 

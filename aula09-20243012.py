@@ -149,10 +149,10 @@ def sidebar():
         st.session_state[f'api_key_{provedor}'] = api_key
 
 
-    if st.button('Iniciar o Assistente'):
+    if st.button('Iniciar o Assistente', use_container_width=True):
         carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo)
 
-    if st.button('Limpar o histórico de conversação'):
+    if st.button('Limpar o histórico de conversação', use_container_width=True):
         st.session_state['memoria'] = MEMORIA
 
 def main():

@@ -96,7 +96,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
 
 def pagina_chat():
-    st.header('⚖️ Assistente Vrtual - CAOJÚRI')
+    st.header('⚖️ Assistente V1rtu4l - CAOJÚRI')
 
     chain = st.session_state.get('chain')
     if chain is None:

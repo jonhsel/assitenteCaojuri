@@ -76,7 +76,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     
     
 
-    system_message = ''' Você é um assistente técnico chamado 'assistente do Jonh Selmo'.
+    system_message = ''' Você é um assistente técnico chamado 'Assistente Virtual do Caojúri'
     Você possui acesso às seguintes informações vindas de um documento{}:
     
     ####
@@ -86,7 +86,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
     Sempre que houver $ na saída, substitua por S.
 
-    Se a informação do documento for algo como "Just a moment...Enable JavaScript and coockies to continue", sugira ao usuário carregar novamente o 'Assistente do Jonh Selmo'!
+    Se a informação do documento for algo como "Just a moment...Enable JavaScript and coockies to continue", sugira ao usuário carregar novamente o 'Assistente Virtual do Caojúri'!
     '''.format(tipo_arquivo, documento)
     template = ChatPromptTemplate.from_messages([
         ('system', system_message),

@@ -5,6 +5,9 @@ from langchain.memory import ConversationBufferMemory
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
+'''
+#Foi inserido o módulo Google Gemini
+'''
 
 from loaders import *
 

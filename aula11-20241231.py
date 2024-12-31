@@ -4,15 +4,15 @@ from langchain.memory import ConversationBufferMemory
 
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-'''
-#Foi inserido o módulo anthropic
-'''
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from loaders import *
 
 from langchain.prompts import ChatPromptTemplate
 
-
+'''
+#Foi inserido o módulo CONSULTA
+'''
 
 #===============
 #CSS
@@ -32,8 +32,10 @@ CONFIG_MODELOS = {  'OpenAI':
                             'chat': ChatOpenAI},
                     'Anthropic':
                             {'modelos':['claude-3-haiku-20240307','claude-3-sonnet-20240229'],
-                             'chat':ChatAnthropic}
-
+                             'chat':ChatAnthropic},
+                    'Google':
+                            {'modelos':['gemini-1.5-flash', 'gemini-1.5-pro'],
+                             'chat': ChatGoogleGenerativeAI}
 
 }
 

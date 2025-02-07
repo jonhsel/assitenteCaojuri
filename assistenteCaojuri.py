@@ -3,6 +3,8 @@ import tempfile
 from langchain.memory import ConversationBufferMemory
 
 from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from loaders import *
 
@@ -23,45 +25,45 @@ TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos
 
 CONFIG_MODELOS = {  'OpenAI': 
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
-                            'chat': ChatOpenAI}
-
+                            'chat': ChatOpenAI},
+                    'Anthropic':
+                            {'modelos':['claude-3-haiku-20240307','claude-3-sonnet-20240229'],
+                             'chat':ChatAnthropic},
+                    'Google':
+                            {'modelos':['gemini-1.5-flash', 'gemini-1.5-pro'],
+                             'chat': ChatGoogleGenerativeAI}
 
 }
 
 MEMORIA = ConversationBufferMemory()
 
 def carrega_arquivo (tipo_arquivo, arquivo):
+    documentos = []
     
 
     if tipo_arquivo == 'Site':
-        
-        documento = carrega_site(arquivo)
-        
-        
-        
+        documento = carrega_site(arquivo)  
+        documentos.append(documento)  
 
     if tipo_arquivo == 'Youtube':
         documento = carrega_youtube(arquivo)
+        documentos.append(documento)  
 
-    if tipo_arquivo == 'Arquivos .pdf':
-        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp:
-            temp.write(arquivo.read())
-            nome_temp = temp.name
-        documento = carrega_pdf(nome_temp)
+    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt']:
+        for arq in arquivo: # Itera sobre a lista de arquivos
+            with tempfile.NamedTemporaryFile(suffix=f'.{tipo_arquivo.split(".")[-1]}', delete=False) as temp:
+                temp.write(arq.read())
+                nome_temp = temp.name
+            if tipo_arquivo == 'Arquivos .pdf':
+                documento = carrega_pdf(nome_temp)
+            elif tipo_arquivo == 'Arquivos .csv':
+                documento = carrega_csv(nome_temp)
+            elif tipo_arquivo == 'Arquivos .txt':
+                documento = carrega_txt(nome_temp)
+            documentos.append(documento)
 
-    if tipo_arquivo == 'Arquivos .csv':
-        with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as temp:
-            temp.write(arquivo.read())
-            nome_temp = temp.name
-        documento = carrega_csv(nome_temp)
+    return documentos
 
-    if tipo_arquivo == 'Arquivos .txt':
-        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp:
-            temp.write(arquivo.read())
-            nome_temp = temp.name
-        documento = carrega_txt(nome_temp)
-    
-    return documento
 
 def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
@@ -130,11 +132,11 @@ def sidebar():
         if tipo_arquivo == 'Youtube':
             arquivo = st.text_input('Digite o ID Youtube : Código alfanumérico situado entre "v=" e "&" da URL')
         if tipo_arquivo == 'Arquivos .pdf':
-            arquivo = st.file_uploader('Carregue o arquivo do tipo .pdf', type=['.pdf'])
+            arquivo = st.file_uploader('Carregue o arquivo do tipo .pdf', type=['.pdf'], accept_multiple_files=True)
         if tipo_arquivo == 'Arquivos .csv':
-            arquivo = st.file_uploader('Carregue o arquivo do tipo .csv', type=['.csv'])
+            arquivo = st.file_uploader('Carregue o arquivo do tipo .csv', type=['.csv'], accept_multiple_files=True)
         if tipo_arquivo == 'Arquivos .txt':
-            arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'])
+            arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'], accept_multiple_files=True)
         
     with tabs_assistente[1]:
         provedor = st.selectbox('Selecione a empresa criadora do modelo de IA', CONFIG_MODELOS.keys())

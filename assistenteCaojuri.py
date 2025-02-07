@@ -27,7 +27,7 @@ CONFIG_MODELOS = {  'OpenAI':
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
                             'chat': ChatOpenAI},
                     'Anthropic':
-                            {'modelos':['claude-3-5-haiku-2024102','claude-3-5-sonnet-20241022'],
+                            {'modelos':['claude-3-5-haiku-20241022','claude-3-5-sonnet-20241022'],
                              'chat':ChatAnthropic},
                     'Google':
                             {'modelos':['gemini-1.5-flash', 'gemini-1.5-pro'],

@@ -30,7 +30,7 @@ CONFIG_MODELOS = {  'OpenAI':
                             {'modelos':['claude-3-5-haiku-20241022','claude-3-5-sonnet-20241022'],
                              'chat':ChatAnthropic},
                     'Google':
-                            {'modelos':['gemini-1.5-flash', 'gemini-1.5-pro'],
+                            {'modelos':['gemini-2.0-flash', 'gemini-2.0-flash-lite-preview-02-05', 'gemini-1.5-flash', 'gemini-1.5-pro'],
                              'chat': ChatGoogleGenerativeAI}
 
 }

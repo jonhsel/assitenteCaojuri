@@ -40,8 +40,8 @@ CONFIG_MODELOS = {  'OpenAI':
                              'chat':ChatAnthropic},
                     'Google':
                             {'modelos':['gemini-2.0-flash', 'gemini-2.0-flash-lite-preview-02-05', 'gemini-1.5-flash', 'gemini-1.5-pro'],
-                             'chat': ChatGoogleGenerativeAI}
-
+                             'chat': ChatGoogleGenerativeAI},
+                    'DeepSeek': {'modelos':['-'],'chat': ChatDeepSeek}
 }
 
 MEMORIA = ConversationBufferMemory()
@@ -83,7 +83,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     documento = carrega_arquivo(tipo_arquivo, arquivo)
     
 
-    system_message = ''' Você é um assistente técnico chamado 'assistente do Jonh Selmo'.
+    system_message = ''' Você é um assistente técnico chamado 'Assistente Virtual do CAOJÚRI'.
     Você possui acesso às seguintes informações vindas de um documento{}:
     
     ####

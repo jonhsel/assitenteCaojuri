@@ -41,8 +41,8 @@ CONFIG_MODELOS = {  'OpenAI':
                              'chat':ChatAnthropic},
                     'Google':
                             {'modelos':['gemini-2.0-flash', 'gemini-2.0-flash-lite-preview-02-05', 'gemini-1.5-flash', 'gemini-1.5-pro'],
-                             'chat': ChatGoogleGenerativeAI},
-                    'DeepSeek': {'modelos':['-'],'chat': ChatDeepSeek}
+                             'chat': ChatGoogleGenerativeAI}
+                    #'DeepSeek': {'modelos':['-'],'chat': ChatDeepSeek}
 }
 
 MEMORIA = ConversationBufferMemory()

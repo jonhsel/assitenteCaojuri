@@ -28,9 +28,9 @@ with open('style.css') as f:
 st.image('images/juria.png')
 
 
-TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt']
+TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt', 'Notion']
 
-ARQUIVO_NOTION =['Notion']
+ARQUIVO_NOTION =['','Notion']
 
 CONFIG_MODELOS = {  'OpenAI': 
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
@@ -137,7 +137,7 @@ def pagina_chat():
         #st._rerun()
         
 def sidebar():
-    tabs_assistente = st.tabs(['Modelo de IA','Uploads de Arquivos', 'Notion'])
+    tabs_assistente = st.tabs(['Modelo de IA','Uploads de Arquivos'])
     
     with tabs_assistente[0]:
         provedor = st.selectbox('Selecione a empresa criadora do modelo de IA', CONFIG_MODELOS.keys())
@@ -161,8 +161,8 @@ def sidebar():
         if tipo_arquivo == 'Arquivos .txt':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'], accept_multiple_files=True)
         
-    with tabs_assistente[2]:
-        tipo_arquivo = st.selectbox('selecione o tipo o Notion', ARQUIVO_NOTION)
+    #with tabs_assistente[2]:
+        #tipo_arquivo = st.selectbox('selecione o tipo o Notion', TIPOS_ARQUIVOS)
         if tipo_arquivo == 'Notion':
             use_env_page = st.checkbox("Usar ID da página configurado no .env", value=True)
             if use_env_page:
@@ -176,33 +176,33 @@ def sidebar():
             else:
                 arquivo = st.text_input('Digite o ID da página do Notion')
 
-        st.info("""
-        As configurações do Notion estão sendo carregadas do arquivo .env
-        
-        Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
-        ```
-        NOTION_API_KEY=sua_chave_api_aqui
-        NOTION_PAGE_ID=id_da_pagina_notion
-        ```
-        """)
-        
-        notion_api_key = os.getenv('NOTION_API_KEY')
-        notion_page_id = os.getenv('NOTION_PAGE_ID')
-        
-        notion_api_status = "✅ Configurada" if notion_api_key else "❌ Não encontrada"
-        notion_page_status = "✅ Configurada" if notion_page_id else "❌ Não encontrada"
-        
-        st.write(f"Status da API Notion: {notion_api_status}")
-        st.write(f"Status da Página Notion: {notion_page_status}")
-        
-        if notion_page_id:
-            st.success(f"ID da Página Notion configurada: {notion_page_id}")
-            st.checkbox("Usar página configurada no .env", key="use_env_page_id", value=True)
-        else:
-            st.warning("ID da Página Notion não configurada no arquivo .env")
-            st.text_input("Digite o ID da página do Notion (opcional)", key="manual_notion_page_id")
-        
-        st.link_button('Criar Nova Integração no Notion', 'https://www.notion.so/my-integrations')  
+            st.info("""
+            As configurações do Notion estão sendo carregadas do arquivo .env
+            
+            Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
+            ```
+            NOTION_API_KEY=sua_chave_api_aqui
+            NOTION_PAGE_ID=id_da_pagina_notion
+            ```
+            """)
+            
+            notion_api_key = os.getenv('NOTION_API_KEY')
+            notion_page_id = os.getenv('NOTION_PAGE_ID')
+            
+            notion_api_status = "✅ Configurada" if notion_api_key else "❌ Não encontrada"
+            notion_page_status = "✅ Configurada" if notion_page_id else "❌ Não encontrada"
+            
+            st.write(f"Status da API Notion: {notion_api_status}")
+            st.write(f"Status da Página Notion: {notion_page_status}")
+            
+            if notion_page_id:
+                st.success(f"ID da Página Notion configurada: {notion_page_id}")
+                st.checkbox("Usar página configurada no .env", key="use_env_page_id", value=True)
+            else:
+                st.warning("ID da Página Notion não configurada no arquivo .env")
+                st.text_input("Digite o ID da página do Notion (opcional)", key="manual_notion_page_id")
+            
+            st.link_button('Criar Nova Integração no Notion', 'https://www.notion.so/my-integrations')  
 
 
     if st.button('▶️ Iniciar o Assistente', use_container_width=True):

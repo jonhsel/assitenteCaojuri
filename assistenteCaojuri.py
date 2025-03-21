@@ -138,7 +138,7 @@ def pagina_chat():
         #st._rerun()
         
 def sidebar():
-    tabs_assistente = st.tabs(['Modelo de IA','Uploads de Arquivos', 'Notion'])
+    tabs_assistente = st.tabs(['Modelo de IA','RAG de dados'])
     
     with tabs_assistente[0]:
         provedor = st.selectbox('Selecione a empresa criadora do modelo de IA', CONFIG_MODELOS.keys())

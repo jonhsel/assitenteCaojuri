@@ -112,62 +112,72 @@ def carrega_notion(notion_page_id=None):
         
         # Handle database content
         else:
-            # Query database entries
-            database_entries = notion.databases.query(database_id=notion_page_id)
-            
-            # Process each database row
-            for entry in database_entries['results']:
-                row_content = []
-                properties = entry.get('properties', {})
+            # Query database entries with pagination
+            start_cursor = None
+            while True:
+                database_entries = notion.databases.query(database_id=notion_page_id, start_cursor=start_cursor)
+                ''' 1-Paginação: Adicionei um loop while True para lidar com a paginação dos resultados do banco de dados. A função notion.databases.query é chamada repetidamente até que todos os resultados sejam recuperados.
+                2-Cursor: Usei start_cursor para rastrear a posição atual na paginação. Se houver mais páginas de resultados (has_more), o cursor é atualizado para next_cursor e a consulta continua.
+                3-Processamento de Propriedades: O processamento das propriedades de cada entrada do banco de dados permanece o mesmo, mas agora é garantido que todos os registros sejam processados.
+                '''   
+                # Process each database row
+                for entry in database_entries['results']:
+                    row_content = []
+                    properties = entry.get('properties', {})
+                    
+                    # Process each property in the row
+                    for prop_name, prop_data in properties.items():
+                        prop_type = prop_data.get('type')
+                        
+                        # Handle different property types
+                        if prop_type == 'title':
+                            title_text = prop_data.get('title', [])
+                            if title_text:
+                                row_content.append(f"{prop_name}: {''.join([t.get('plain_text', '') for t in title_text])}")
+                        
+                        elif prop_type == 'rich_text':
+                            rich_text = prop_data.get('rich_text', [])
+                            if rich_text:
+                                row_content.append(f"{prop_name}: {''.join([t.get('plain_text', '') for t in rich_text])}")
+                        
+                        elif prop_type == 'number':
+                            number = prop_data.get('number')
+                            if number is not None:
+                                row_content.append(f"{prop_name}: {number}")
+                        
+                        elif prop_type == 'select':
+                            select = prop_data.get('select', {})
+                            if select and select.get('name'):
+                                row_content.append(f"{prop_name}: {select.get('name')}")
+                        
+                        elif prop_type == 'multi_select':
+                            multi_select = prop_data.get('multi_select', [])
+                            if multi_select:
+                                values = [item.get('name', '') for item in multi_select if item.get('name')]
+                                if values:
+                                    row_content.append(f"{prop_name}: {', '.join(values)}")
+                        
+                        elif prop_type == 'date':
+                            date = prop_data.get('date', {})
+                            if date and date.get('start'):
+                                date_text = date.get('start')
+                                if date.get('end'):
+                                    date_text += f" - {date.get('end')}"
+                                row_content.append(f"{prop_name}: {date_text}")
+                        
+                        elif prop_type == 'checkbox':
+                            checkbox = prop_data.get('checkbox')
+                            if checkbox is not None:
+                                row_content.append(f"{prop_name}: {'Sim' if checkbox else 'Não'}")
+                    
+                    # Add the row content as a paragraph
+                    if row_content:
+                        text_content.append(' | '.join(row_content))
                 
-                # Process each property in the row
-                for prop_name, prop_data in properties.items():
-                    prop_type = prop_data.get('type')
-                    
-                    # Handle different property types
-                    if prop_type == 'title':
-                        title_text = prop_data.get('title', [])
-                        if title_text:
-                            row_content.append(f"{prop_name}: {''.join([t.get('plain_text', '') for t in title_text])}")
-                    
-                    elif prop_type == 'rich_text':
-                        rich_text = prop_data.get('rich_text', [])
-                        if rich_text:
-                            row_content.append(f"{prop_name}: {''.join([t.get('plain_text', '') for t in rich_text])}")
-                    
-                    elif prop_type == 'number':
-                        number = prop_data.get('number')
-                        if number is not None:
-                            row_content.append(f"{prop_name}: {number}")
-                    
-                    elif prop_type == 'select':
-                        select = prop_data.get('select', {})
-                        if select and select.get('name'):
-                            row_content.append(f"{prop_name}: {select.get('name')}")
-                    
-                    elif prop_type == 'multi_select':
-                        multi_select = prop_data.get('multi_select', [])
-                        if multi_select:
-                            values = [item.get('name', '') for item in multi_select if item.get('name')]
-                            if values:
-                                row_content.append(f"{prop_name}: {', '.join(values)}")
-                    
-                    elif prop_type == 'date':
-                        date = prop_data.get('date', {})
-                        if date and date.get('start'):
-                            date_text = date.get('start')
-                            if date.get('end'):
-                                date_text += f" - {date.get('end')}"
-                            row_content.append(f"{prop_name}: {date_text}")
-                    
-                    elif prop_type == 'checkbox':
-                        checkbox = prop_data.get('checkbox')
-                        if checkbox is not None:
-                            row_content.append(f"{prop_name}: {'Sim' if checkbox else 'Não'}")
-                
-                # Add the row content as a paragraph
-                if row_content:
-                    text_content.append(' | '.join(row_content))
+                # Check if there are more pages of results
+                if not database_entries.get('has_more'):
+                    break
+                start_cursor = database_entries.get('next_cursor')
         
         # Return error message if no content was found
         if not text_content:

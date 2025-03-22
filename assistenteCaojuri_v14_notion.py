@@ -31,7 +31,7 @@ st.image('images/juria.png')
 
 TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt', 'Notion']
 
-#ARQUIVO_NOTION =['Notion']
+ARQUIVO_NOTION =['Notion']
 
 CONFIG_MODELOS = {  'OpenAI': 
                             {'modelos': ['gpt-4o-mini', 'gpt-4o'],
@@ -59,7 +59,7 @@ def carrega_arquivo (tipo_arquivo, arquivo):
         documento = carrega_youtube(arquivo)
         documentos.append(documento)  
 
-    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt', 'Notion']:
+    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt']:
         for arq in arquivo: # Itera sobre a lista de arquivos
             with tempfile.NamedTemporaryFile(suffix=f'.{tipo_arquivo.split(".")[-1]}', delete=False) as temp:
                 temp.write(arq.read())
@@ -70,13 +70,13 @@ def carrega_arquivo (tipo_arquivo, arquivo):
                 documento = carrega_csv(nome_temp)
             elif tipo_arquivo == 'Arquivos .txt':
                 documento = carrega_txt(nome_temp)
+            elif tipo_arquivo == 'Notion':
+                documento = carrega_notion(nome_temp)
             documentos.append(documento)
 
-
-
     elif tipo_arquivo == 'Notion':
-          documento = carrega_notion(arquivo)
-          documentos.append(documento)
+        documento = carrega_notion(arquivo)
+        documentos.append(documento)
 
     return documentos
 

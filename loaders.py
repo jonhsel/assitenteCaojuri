@@ -120,6 +120,10 @@ def carrega_notion(notion_page_id=None):
                 2-Cursor: Usei start_cursor para rastrear a posição atual na paginação. Se houver mais páginas de resultados (has_more), o cursor é atualizado para next_cursor e a consulta continua.
                 3-Processamento de Propriedades: O processamento das propriedades de cada entrada do banco de dados permanece o mesmo, mas agora é garantido que todos os registros sejam processados.
                 '''   
+                  # Debug: Print the raw response from the API
+                if not database_entries['results']:
+                    break # break if no results       
+                         
                 # Process each database row
                 for entry in database_entries['results']:
                     row_content = []

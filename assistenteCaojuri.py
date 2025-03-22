@@ -170,7 +170,7 @@ def sidebar():
                 notion_page_id = os.getenv('NOTION_PAGE_ID')
                 if notion_page_id:
                     st.success(f"Usando ID da página do Notion do arquivo .env: {notion_page_id}")
-                    arquivo = None  # Will use the .env value
+                    arquivo = notion_page_id  # Will use the .env value
                 else:
                     st.warning("ID da página do Notion não configurado no arquivo .env")
                     arquivo = st.text_input('Digite o ID da página do Notion')

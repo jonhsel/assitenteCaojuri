@@ -94,6 +94,7 @@ def carrega_notion(notion_page_id=None):
         
         text_content = []
         
+        
         # Handle page content
         if not is_database:
             # Extract text content from page blocks
@@ -113,13 +114,25 @@ def carrega_notion(notion_page_id=None):
         # Handle database content
         else:
             # Query database entries with pagination
+            #text_content = []
+            has_more = True
+    
             start_cursor = None
-            while True:
-                database_entries = notion.databases.query(database_id=notion_page_id, start_cursor=start_cursor)
+            while has_more:
+                # Adicione um page_size para controlar quantidade de registros
+
+                database_entries = notion.databases.query(
+                    database_id=notion_page_id, 
+                    start_cursor=start_cursor
+                    #page_size=300
+                    )
                 ''' 1-Paginação: Adicionei um loop while True para lidar com a paginação dos resultados do banco de dados. A função notion.databases.query é chamada repetidamente até que todos os resultados sejam recuperados.
                 2-Cursor: Usei start_cursor para rastrear a posição atual na paginação. Se houver mais páginas de resultados (has_more), o cursor é atualizado para next_cursor e a consulta continua.
                 3-Processamento de Propriedades: O processamento das propriedades de cada entrada do banco de dados permanece o mesmo, mas agora é garantido que todos os registros sejam processados.
                 '''   
+                print(f"Total de registros recuperados: {len(database_entries['results'])}")
+
+
                   # Debug: Print the raw response from the API
                 if not database_entries['results']:
                     break # break if no results       
@@ -181,6 +194,7 @@ def carrega_notion(notion_page_id=None):
                 # Check if there are more pages of results
                 if not database_entries.get('has_more'):
                     break
+                has_more = database_entries.get('has_more', False)
                 start_cursor = database_entries.get('next_cursor')
         
         # Return error message if no content was found

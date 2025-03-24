@@ -59,7 +59,7 @@ def carrega_arquivo (tipo_arquivo, arquivo):
         documento = carrega_youtube(arquivo)
         documentos.append(documento)  
 
-    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt', 'Notion']:
+    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt']:
         for arq in arquivo: # Itera sobre a lista de arquivos
             with tempfile.NamedTemporaryFile(suffix=f'.{tipo_arquivo.split(".")[-1]}', delete=False) as temp:
                 temp.write(arq.read())

@@ -9,7 +9,7 @@ from langchain_community.document_loaders import (WebBaseLoader,
 
 import os
 import tempfile
-import moviepy as mp
+import moviepy.editor as mp
 from pydub import AudioSegment
 import speech_recognition as sr
 import datetime

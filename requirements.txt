@@ -130,3 +130,6 @@ wheel==0.44.0
 wrapt==1.17.0
 yarl==1.18.3
 youtube-transcript-api==0.6.2
+moviepy==1.0.3
+pydub==0.25.1
+SpeechRecognition==3.10.0

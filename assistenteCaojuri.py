@@ -7,7 +7,8 @@ from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
 #from langchain_deepseek import ChatDeepSeek
 
-from loaders import *
+from loaders import mostrar_opcoes_download
+from loaders import carrega_site, carrega_youtube, carrega_csv, carrega_pdf, carrega_txt, transcrever_mp4, carrega_notion
 import os
 from dotenv import load_dotenv
 from notion_client import Client
@@ -29,7 +30,7 @@ with open('style.css') as f:
 st.image('images/juria.png')
 
 
-TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt', 'Notion']
+TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt','Arquivos .mp4', 'Notion']
 
 #ARQUIVO_NOTION =['Notion']
 
@@ -59,17 +60,26 @@ def carrega_arquivo (tipo_arquivo, arquivo):
         documento = carrega_youtube(arquivo)
         documentos.append(documento)  
 
-    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt']:
+    elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt', 'Arquivos .mp4']:
         for arq in arquivo: # Itera sobre a lista de arquivos
-            with tempfile.NamedTemporaryFile(suffix=f'.{tipo_arquivo.split(".")[-1]}', delete=False) as temp:
-                temp.write(arq.read())
-                nome_temp = temp.name
-            if tipo_arquivo == 'Arquivos .pdf':
-                documento = carrega_pdf(nome_temp)
-            elif tipo_arquivo == 'Arquivos .csv':
-                documento = carrega_csv(nome_temp)
-            elif tipo_arquivo == 'Arquivos .txt':
-                documento = carrega_txt(nome_temp)
+            if tipo_arquivo == 'Arquivos .mp4':
+                # Para MP4, trabalhamos diretamente com o arquivo
+                transcricao, duracao = transcrever_mp4(arq)
+                documento = transcricao
+                nome_arquivo_base = arq.name.replace('.mp4', '')
+                st.session_state[f'mostrar_download_{nome_arquivo_base}'] = True
+                st.session_state[f'transcricao_{nome_arquivo_base}'] = transcricao
+                st.session_state[f'duracao_{nome_arquivo_base}'] = duracao
+            else:
+                with tempfile.NamedTemporaryFile(suffix=f'.{tipo_arquivo.split(".")[-1]}', delete=False) as temp:
+                    temp.write(arq.read())
+                    nome_temp = temp.name
+                if tipo_arquivo == 'Arquivos .pdf':
+                    documento = carrega_pdf(nome_temp)
+                elif tipo_arquivo == 'Arquivos .csv':
+                    documento = carrega_csv(nome_temp)
+                elif tipo_arquivo == 'Arquivos .txt':
+                    documento = carrega_txt(nome_temp)
             documentos.append(documento)
 
 
@@ -112,6 +122,19 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
 def pagina_chat():
     st.header('⚖️ Assistente Virtual - CAOJÚRI')
+
+    # Verificar se há transcrições para exibir opções de download
+    chaves_transcrição = [k for k in st.session_state.keys() if k.startswith('mostrar_download_')]
+    if chaves_transcrição:
+        st.subheader("Transcrições Disponíveis para Download")
+        for chave in chaves_transcrição:
+            nome_arquivo_base = chave.replace('mostrar_download_', '')
+            if st.session_state.get(chave, False):
+                transcricao = st.session_state.get(f'transcricao_{nome_arquivo_base}', '')
+                duracao = st.session_state.get(f'duracao_{nome_arquivo_base}', 0)
+                mostrar_opcoes_download(nome_arquivo_base, transcricao, duracao)
+        
+        st.divider()
 
     chain = st.session_state.get('chain')
     if chain is None:
@@ -163,7 +186,10 @@ def sidebar():
             arquivo = st.file_uploader('Carregue o arquivo do tipo .csv', type=['.csv'], accept_multiple_files=True)
         if tipo_arquivo == 'Arquivos .txt':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'], accept_multiple_files=True)
-        
+        if tipo_arquivo == 'Arquivos .mp4':
+            arquivo = st.file_uploader('Carregue o arquivo do tipo .mp4', type=['mp4'], accept_multiple_files=True)
+            st.info('Os arquivos MP4 serão processados para extrair e transcrever o áudio. Após o processamento, você poderá baixar a transcrição em formato .txt ou .srt (legendas).')
+
     #with tabs_assistente[2]:
         #tipo_arquivo = st.selectbox('selecione o tipo o Notion', ARQUIVO_NOTION)
         if tipo_arquivo == 'Notion':

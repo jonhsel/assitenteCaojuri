@@ -30,7 +30,7 @@ with open('style.css') as f:
 st.image('images/juria.png')
 
 
-TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt','Arquivos .mp4', 'Notion']
+TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos .txt','Arquivos .mp4', 'Notion', 'Google Drive']
 
 #ARQUIVO_NOTION =['Notion']
 
@@ -183,8 +183,7 @@ def sidebar():
         elif tipo_arquivo == 'Youtube':
             arquivo = st.text_input('Digite a URL do Youtube')
         elif tipo_arquivo == 'Google Drive':
-            arquivo = st.text_input('Digite a URL do arquivo no Google Drive',
-                help="Exemplo: https://drive.google.com/file/d/SEU_ID_AQUI/view?usp=sharing")
+            arquivo = st.text_input('Digite a URL do arquivo no Google Drive')
         elif tipo_arquivo == 'Arquivos .pdf':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .pdf', type=['.pdf'], accept_multiple_files=True)
         elif tipo_arquivo == 'Arquivos .csv':

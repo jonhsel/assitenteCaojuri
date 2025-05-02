@@ -1,3 +1,4 @@
+
 from langchain_community.document_loaders import (WebBaseLoader,
                                                   YoutubeLoader,
                                                   CSVLoader,
@@ -8,17 +9,12 @@ from langchain_community.document_loaders import (WebBaseLoader,
 
 import os
 import tempfile
-import re
-import urllib.parse
-import requests
 import moviepy.editor as mp
 from pydub import AudioSegment
 import speech_recognition as sr
 import datetime
 import base64
 import streamlit as st
-from pytube import YouTube
-import gdown
 
 
 from dotenv import load_dotenv
@@ -27,53 +23,6 @@ from notion_client import Client
 #Load environment variables
 load_dotenv()
 
-def extrair_id_video_youtube(url):
-    """Extrai o ID do vídeo a partir de um link do YouTube"""
-    # Padrões possíveis de URLs do YouTube
-    patterns = [
-        r'(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/e\/|youtube\.com\/user\/.+\/|youtube\.com\/user\/\w+#p\/u\/\d+\/|youtube\.com\/\?v=|youtube\.com\/\?feature=player_embedded&v=|youtube\.com\/user\/.+\/\?v=|youtube\.com\/user\/.+\&v=|youtube\.com\/attribution_link\?a=.+?&u=%2Fwatch%3Fv%3D|youtube\.com\/attribution_link\?u=%2Fwatch%3Fv%3D)([^"&?\/\s]{11})',
-        r'(?:youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/e\/)([^"&?\/\s]{11})'
-    ]
-    
-    for pattern in patterns:
-        match = re.search(pattern, url)
-        if match:
-            return match.group(1)
-    
-    # Se ainda não encontrou, tenta extrair de URLs curtas
-    parsed_url = urllib.parse.urlparse(url)
-    if parsed_url.netloc == 'youtu.be':
-        return parsed_url.path[1:]
-    
-    # Se não for uma URL completa, verifica se o próprio texto é um ID válido do YouTube
-    if re.match(r'^[a-zA-Z0-9_-]{11}$', url):
-        return url
-    
-    return None
-
-def extrair_id_arquivo_google_drive(url):
-    """Extrai o ID do arquivo a partir de um link do Google Drive"""
-    # Formato comum de URL do Google Drive
-    pattern = r'(?:/file/d/|/open\?id=|id=)([a-zA-Z0-9_-]{25,})'
-    match = re.search(pattern, url)
-    if match:
-        return match.group(1)
-    
-    # Para links de compartilhamento com /view?usp=sharing
-    parsed_url = urllib.parse.urlparse(url)
-    if 'drive.google.com' in parsed_url.netloc:
-        query_params = urllib.parse.parse_qs(parsed_url.query)
-        path_parts = parsed_url.path.split('/')
-        
-        if 'id' in query_params:
-            return query_params['id'][0]
-        elif len(path_parts) >= 3 and path_parts[-2] == 'd':
-            return path_parts[-1]
-    
-    return None
-
-
-
 def carrega_site(url):
     loader = WebBaseLoader(url)
     lista_documentos = loader.load()
@@ -81,169 +30,11 @@ def carrega_site(url):
     return  documento
 
 
-def carrega_youtube(url):
-    """Carrega e transcreve conteúdo de um vídeo do YouTube"""
-    try:
-        with st.spinner('Baixando vídeo do YouTube...'):
-            id_video = extrair_id_video_youtube(url)
-            if not id_video:
-                return f"Erro: URL ou ID do YouTube inválido: {url}"
-            
-            # Criar diretório temporário para download
-            temp_dir = tempfile.mkdtemp()
-            yt = YouTube(f"https://www.youtube.com/watch?v={id_video}")
-            
-            # Obter informações do vídeo
-            titulo = yt.title
-            duracao = yt.length
-            
-            # Baixar o vídeo (apenas áudio para economizar tempo)
-            audio_stream = yt.streams.filter(only_audio=True).first()
-            audio_path = audio_stream.download(output_path=temp_dir)
-            
-            # Converter para wav para processamento
-            wav_path = os.path.join(temp_dir, 'audio.wav')
-            audio = AudioSegment.from_file(audio_path)
-            audio.export(wav_path, format="wav")
-        
-        with st.spinner('Transcrevendo áudio do YouTube...'):
-            # Usar o mesmo método de transcrição que usamos para MP4
-            recognizer = sr.Recognizer()
-            
-            # Dividir áudio em chunks para melhor reconhecimento
-            sound = AudioSegment.from_wav(wav_path)
-            chunks = []
-            chunk_size = 60000  # 60 segundos por chunk
-            for i in range(0, len(sound), chunk_size):
-                chunk = sound[i:i+chunk_size]
-                chunk_path = os.path.join(temp_dir, f"chunk_{i}.wav")
-                chunk.export(chunk_path, format="wav")
-                chunks.append(chunk_path)
-            
-            transcricao = ""
-            for i, chunk_path in enumerate(chunks):
-                with sr.AudioFile(chunk_path) as source:
-                    audio_data = recognizer.record(source)
-                    try:
-                        parte_texto = recognizer.recognize_google(audio_data, language="pt-BR")
-                        transcricao += parte_texto + " "
-                    except sr.UnknownValueError:
-                        transcricao += "[Trecho inaudível] "
-                    except sr.RequestError:
-                        transcricao += "[Erro na API de reconhecimento] "
-                
-                # Limpar arquivo temporário
-                os.remove(chunk_path)
-            
-            # Salvar a transcrição na sessão para download posterior
-            st.session_state[f'transcricao_youtube_{id_video}'] = transcricao
-            st.session_state[f'duracao_youtube_{id_video}'] = duracao
-            st.session_state[f'titulo_youtube_{id_video}'] = titulo
-            st.session_state[f'mostrar_download_youtube_{id_video}'] = True
-            
-            # Limpar arquivos temporários
-            os.remove(wav_path)
-            os.remove(audio_path)
-            os.rmdir(temp_dir)
-            
-            return transcricao.strip()
-    except Exception as e:
-        st.error(f"Erro ao processar o vídeo do YouTube: {str(e)}")
-        return f"Erro na transcrição do YouTube: {str(e)}"
-
-def carrega_google_drive(url):
-    """Carrega conteúdo de um arquivo do Google Drive"""
-    try:
-        with st.spinner('Baixando arquivo do Google Drive...'):
-            file_id = extrair_id_arquivo_google_drive(url)
-            if not file_id:
-                return f"Erro: URL do Google Drive inválida: {url}"
-            
-            # Criar diretório temporário para download
-            temp_dir = tempfile.mkdtemp()
-            output_path = os.path.join(temp_dir, 'downloaded_file')
-            
-            # Baixar o arquivo
-            gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
-            
-            # Determinar o tipo de arquivo pelo conteúdo
-            file_type = None
-            with open(output_path, 'rb') as f:
-                header = f.read(4)
-                if header.startswith(b'%PDF'):
-                    file_type = 'pdf'
-                    output_with_ext = output_path + '.pdf'
-                elif header.startswith(b'\x00\x00\x00') or header.startswith(b'\x00\x00\x01'):
-                    file_type = 'mp4'
-                    output_with_ext = output_path + '.mp4'
-            
-            # Se não identificado pelo cabeçalho, tentar pela extensão na URL
-            if not file_type:
-                if 'name=' in url:
-                    name_part = re.search(r'name=([^&]+)', url)
-                    if name_part:
-                        file_name = name_part.group(1)
-                        if '.' in file_name:
-                            ext = file_name.split('.')[-1].lower()
-                            if ext in ['pdf', 'txt', 'csv', 'mp4']:
-                                file_type = ext
-                                output_with_ext = output_path + '.' + ext
-            
-            # Se ainda não identificado, verificar pelo mimetype
-            if not file_type:
-                import magic
-                mime = magic.Magic(mime=True)
-                file_mime = mime.from_file(output_path)
-                if 'pdf' in file_mime:
-                    file_type = 'pdf'
-                    output_with_ext = output_path + '.pdf'
-                elif 'text' in file_mime:
-                    file_type = 'txt'
-                    output_with_ext = output_path + '.txt'
-                elif 'csv' in file_mime:
-                    file_type = 'csv'
-                    output_with_ext = output_path + '.csv'
-                elif 'video' in file_mime or 'mp4' in file_mime:
-                    file_type = 'mp4'
-                    output_with_ext = output_path + '.mp4'
-            
-            # Renomear o arquivo com a extensão correta
-            if file_type:
-                os.rename(output_path, output_with_ext)
-                
-                # Processar de acordo com o tipo de arquivo
-                if file_type == 'pdf':
-                    return carrega_pdf(output_with_ext)
-                elif file_type == 'txt':
-                    return carrega_txt(output_with_ext)
-                elif file_type == 'csv':
-                    return carrega_csv(output_with_ext)
-                elif file_type == 'mp4':
-                    # Para MP4, criar um objeto similar ao UploadedFile do Streamlit
-                    class MockUploadedFile:
-                        def __init__(self, path, name):
-                            self.path = path
-                            self.name = name
-                            
-                        def read(self):
-                            with open(self.path, 'rb') as f:
-                                return f.read()
-                    
-                    mock_file = MockUploadedFile(output_with_ext, f"gdrive_{file_id}.mp4")
-                    transcricao, duracao = transcrever_mp4(mock_file)
-                    
-                    # Salvar dados para download
-                    st.session_state[f'transcricao_gdrive_{file_id}'] = transcricao
-                    st.session_state[f'duracao_gdrive_{file_id}'] = duracao
-                    st.session_state[f'mostrar_download_gdrive_{file_id}'] = True
-                    
-                    return transcricao
-            else:
-                return f"Erro: Tipo de arquivo não suportado do Google Drive: {url}"
-    except Exception as e:
-        st.error(f"Erro ao processar o arquivo do Google Drive: {str(e)}")
-        return f"Erro ao processar arquivo do Google Drive: {str(e)}"
-
+def carrega_youtube(video_id):
+    loader = YoutubeLoader(video_id, add_video_info=False, language=['pt'])
+    lista_documentos = loader.load()
+    documento = '\n\n'.join([doc.page_content for doc in lista_documentos])
+    return  documento 
 
 
 def carrega_csv(caminho):

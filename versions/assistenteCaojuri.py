@@ -8,7 +8,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 #from langchain_deepseek import ChatDeepSeek
 
 from loaders import mostrar_opcoes_download
-from loaders import carrega_site, carrega_youtube, carrega_csv, carrega_pdf, carrega_txt, transcrever_mp4, carrega_notion, carrega_google_drive
+from loaders import carrega_site, carrega_youtube, carrega_csv, carrega_pdf, carrega_txt, transcrever_mp4, carrega_notion
 import os
 from dotenv import load_dotenv
 from notion_client import Client
@@ -56,13 +56,9 @@ def carrega_arquivo (tipo_arquivo, arquivo):
         documento = carrega_site(arquivo)  
         documentos.append(documento)  
 
-    elif tipo_arquivo == 'Youtube':
+    if tipo_arquivo == 'Youtube':
         documento = carrega_youtube(arquivo)
         documentos.append(documento)  
-
-    elif tipo_arquivo == 'Google Drive':
-        documento = carrega_google_drive(arquivo)
-        documentos.append(documento)
 
     elif tipo_arquivo in ['Arquivos .pdf', 'Arquivos .csv', 'Arquivos .txt', 'Arquivos .mp4']:
         for arq in arquivo: # Itera sobre a lista de arquivos
@@ -86,6 +82,8 @@ def carrega_arquivo (tipo_arquivo, arquivo):
                     documento = carrega_txt(nome_temp)
             documentos.append(documento)
 
+
+
     elif tipo_arquivo == 'Notion':
           documento = carrega_notion(arquivo)
           documentos.append(documento)
@@ -98,7 +96,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
     documento = carrega_arquivo(tipo_arquivo, arquivo)
     
 
-    system_message = ''' Você é JúrIA - Assitente Virtual do CAOJÚRI.
+    system_message = ''' Você é um assistente técnico chamado 'Assistente Virtual do CAOJÚRI'.
     Você possui acesso às seguintes informações vindas de um documento{}:
     
     ####
@@ -123,7 +121,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
 
 def pagina_chat():
-    st.header('⚖️ JúrIA - Assistente Virtual do CAOJÚRI')
+    st.header('⚖️ Assistente Virtual - CAOJÚRI')
 
     # Verificar se há transcrições para exibir opções de download
     chaves_transcrição = [k for k in st.session_state.keys() if k.startswith('mostrar_download_')]
@@ -140,7 +138,7 @@ def pagina_chat():
 
     chain = st.session_state.get('chain')
     if chain is None:
-        st.error('⚠️ Carregue o arquivo ou digite a url antes de inicializar o JúrIA!')
+        st.error('⚠️ Carregue o arquivo ou digite a url/id antes de inicializar o assistente!')
         st.stop()
 
     memoria = st.session_state.get('memoria', MEMORIA)
@@ -180,18 +178,15 @@ def sidebar():
         tipo_arquivo = st.selectbox('selecione o tipo de URL ou arquivo', TIPOS_ARQUIVOS)
         if tipo_arquivo == 'Site':
             arquivo = st.text_input('Digite a URL do site')
-        elif tipo_arquivo == 'Youtube':
-            arquivo = st.text_input('Digite a URL do Youtube')
-        elif tipo_arquivo == 'Google Drive':
-            arquivo = st.text_input('Digite a URL do arquivo no Google Drive',
-                help="Exemplo: https://drive.google.com/file/d/SEU_ID_AQUI/view?usp=sharing")
-        elif tipo_arquivo == 'Arquivos .pdf':
+        if tipo_arquivo == 'Youtube':
+            arquivo = st.text_input('Digite o ID Youtube : Código alfanumérico situado entre "v=" e "&" da URL')
+        if tipo_arquivo == 'Arquivos .pdf':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .pdf', type=['.pdf'], accept_multiple_files=True)
-        elif tipo_arquivo == 'Arquivos .csv':
+        if tipo_arquivo == 'Arquivos .csv':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .csv', type=['.csv'], accept_multiple_files=True)
-        elif tipo_arquivo == 'Arquivos .txt':
+        if tipo_arquivo == 'Arquivos .txt':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .txt', type=['.txt'], accept_multiple_files=True)
-        elif tipo_arquivo == 'Arquivos .mp4':
+        if tipo_arquivo == 'Arquivos .mp4':
             arquivo = st.file_uploader('Carregue o arquivo do tipo .mp4', type=['mp4'], accept_multiple_files=True)
             st.info('Os arquivos MP4 serão processados para extrair e transcrever o áudio. Após o processamento, você poderá baixar a transcrição em formato .txt ou .srt (legendas).')
 

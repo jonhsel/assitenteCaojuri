@@ -133,3 +133,7 @@ youtube-transcript-api==0.6.2
 moviepy==1.0.3
 pydub==0.25.1
 SpeechRecognition==3.10.0
+python-magic==0.4.27
+pytube==15.0.0
+gdown==5.2.0
+pydub==0.25.1

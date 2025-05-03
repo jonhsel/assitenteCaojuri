@@ -108,7 +108,7 @@ def carrega_modelo(provedor, modelo, api_key, tipo_arquivo, arquivo):
 
     Sempre que houver $ na saída, substitua por S.
 
-    Se a informação do documento for algo como "Just a moment...Enable JavaScript and coockies to continue", sugira ao usuário carregar novamente o 'Assistente do Jonh Selmo'!
+    Se a informação do documento for algo como "Just a moment...Enable JavaScript and coockies to continue", sugira ao usuário carregar novamente de JúrIA!
     '''.format(tipo_arquivo, documento)
     template = ChatPromptTemplate.from_messages([
         ('system', system_message),
@@ -140,7 +140,7 @@ def pagina_chat():
 
     chain = st.session_state.get('chain')
     if chain is None:
-        st.error('⚠️ Carregue o arquivo ou digite a url antes de inicializar o JúrIA!')
+        st.error('⚠️ Carregue o arquivo ou digite a url antes de inicializar a JúrIA!')
         st.stop()
 
     memoria = st.session_state.get('memoria', MEMORIA)

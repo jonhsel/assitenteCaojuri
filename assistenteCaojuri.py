@@ -171,7 +171,7 @@ def sidebar():
         provedor = st.selectbox('Selecione a empresa criadora do modelo de IA', CONFIG_MODELOS.keys())
         modelo = st.selectbox('Selecione o modelo de IA', CONFIG_MODELOS[provedor]['modelos'])
         api_key = st.text_input(
-            f'Adicione a API do modelo escolhido: {provedor}',
+            f'Adicione a API do modelo escolhido 2: {provedor}',
             value=st.session_state.get(f'api_key_{provedor}')
         )
         st.session_state[f'api_key_{provedor}'] = api_key

@@ -35,14 +35,18 @@ TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos
 #ARQUIVO_NOTION =['Notion']
 
 CONFIG_MODELOS = {  'OpenAI': 
-                            {'modelos': ['gpt-4o-mini', 'gpt-4o'],
+                            #{'modelos': ['gpt-4o-mini', 'gpt-4o'],
+                            {'modelos': ['gpt-5-nano', 'gpt-5','gpt-4.1-nano', 'gpt-4.1-mini', 'gpt-4.1'],
                             'chat': ChatOpenAI},
                     'Anthropic':
-                            {'modelos':['claude-3-5-haiku-20241022','claude-3-5-sonnet-20241022'],
-                             'chat':ChatAnthropic},
+                            
+                            #{'modelos':['claude-3-5-haiku-20241022','claude-3-5-sonnet-20241022'],
+                            {'modelos':['claude-3-5-haiku-20241022','claude-sonnet-4-20250514'],
+                            'chat':ChatAnthropic},
                     'Google':
-                            {'modelos':['gemini-2.0-flash', 'gemini-2.0-flash-lite-preview-02-05', 'gemini-1.5-flash', 'gemini-1.5-pro'],
-                             'chat': ChatGoogleGenerativeAI}
+                            #{'modelos':['gemini-2.0-flash', 'gemini-2.0-flash-lite-preview-02-05', 'gemini-1.5-flash', 'gemini-1.5-pro'],
+                            {'modelos':['gemini-2.5-flash', 'gemini-2.5-flash-lite-preview', 'gemini-2.5-pro'],
+                            'chat': ChatGoogleGenerativeAI}
                     #'DeepSeek': {'modelos':['-'],'chat': ChatDeepSeek}
 }
 

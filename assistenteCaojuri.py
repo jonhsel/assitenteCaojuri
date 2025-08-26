@@ -206,7 +206,7 @@ def sidebar():
             if use_env_page:
                 notion_page_id = os.getenv('NOTION_PAGE_ID')
                 if notion_page_id:
-                    st.success(f"Usando ID da página do Notion do arquivo .env: {notion_page_id}")
+                    st.success("Usando ID da página do Notion")
                     arquivo = notion_page_id  # Will use the .env value
                 else:
                     st.warning("ID da página do Notion não configurado no arquivo .env")
@@ -215,13 +215,9 @@ def sidebar():
                 arquivo = st.text_input('Digite o ID da página do Notion')
 
             st.info("""
-            As configurações do Notion estão sendo carregadas do arquivo .env
+            As configurações do Notion estão sendo carregadas.
             
-            Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
-            ```
-            NOTION_API_KEY=sua_chave_api_aqui
-            NOTION_PAGE_ID=id_da_pagina_notion
-            ```
+            
             """)
             
             notion_api_key = os.getenv('NOTION_API_KEY')
@@ -234,7 +230,7 @@ def sidebar():
             st.write(f"Status da Página Notion: {notion_page_status}")
             
             if notion_page_id:
-                st.success(f"ID da Página Notion configurada: {notion_page_id}")
+                st.success("ID da Página Notion configurada")
                 st.checkbox("Usar página configurada no .env", key="use_env_page_id", value=True)
             else:
                 st.warning("ID da Página Notion não configurada no arquivo .env")

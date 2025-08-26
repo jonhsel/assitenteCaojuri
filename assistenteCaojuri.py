@@ -177,7 +177,7 @@ def sidebar():
         st.session_state[f'api_key_{provedor}'] = api_key
 
         # Adiciona a mensagem condicional
-        if api_key:
+        if api_key != '':
             st.info('API adicionada! Agora vá para o menu "RAG de dados" para iniciar o assistente.')
 
 

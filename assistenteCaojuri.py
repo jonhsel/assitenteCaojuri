@@ -36,7 +36,7 @@ TIPOS_ARQUIVOS = ['Arquivos .pdf', 'Site', 'Youtube', 'Arquivos .csv', 'Arquivos
 
 CONFIG_MODELOS = {  'OpenAI': 
                             #{'modelos': ['gpt-4o-mini', 'gpt-4o'],
-                            {'modelos': ['gpt-5-nano', 'gpt-5','gpt-4.1-nano', 'gpt-4.1-mini', 'gpt-4.1'],
+                            {'modelos': ['gpt-5-nano-2025-08-07', 'gpt-5-mini-2025-08-07','gpt-5-2025-08-07','gpt-4.1-nano', 'gpt-4.1-mini', 'gpt-4.1'],
                             'chat': ChatOpenAI},
                     'Anthropic':
                             

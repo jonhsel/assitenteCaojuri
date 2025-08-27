@@ -16,6 +16,13 @@ from notion_client import Client
 
 from langchain.prompts import ChatPromptTemplate
 
+st.set_page_config(
+    page_title='JúrIA - Assistente Virtual do CAOJÚRI',
+    page_icon='⚖️',
+    layout='wide'
+)
+
+
 
 #Load environment variables
 load_dotenv()

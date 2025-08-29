@@ -2,6 +2,14 @@ import streamlit as st
 import tempfile
 from langchain.memory import ConversationBufferMemory
 
+import sqlite3
+from datetime import datetime
+import uuid
+import pandas as pd
+import plotly.express as px
+import json
+
+
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -27,6 +35,113 @@ st.set_page_config(
 #Load environment variables
 load_dotenv()
 #================
+
+#CONTADOR DE VISITANTES
+
+def inicializar_db():
+    conn = sqlite3.connect('acessos.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS acessos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME,
+            session_id TEXT,
+            ip_address TEXT,
+            user_agent TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+def registrar_acesso():
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = str(uuid.uuid4())
+    
+    conn = sqlite3.connect('acessos.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        INSERT INTO acessos (timestamp, session_id, ip_address, user_agent)
+        VALUES (?, ?, ?, ?)
+    ''', (datetime.now(), st.session_state.session_id, "intranet", "streamlit_app"))
+    
+    conn.commit()
+    
+    cursor.execute('SELECT COUNT(DISTINCT session_id) FROM acessos')
+    total_visitantes = cursor.fetchone()[0]
+    
+    conn.close()
+    return total_visitantes
+
+def obter_estatisticas():
+    conn = sqlite3.connect('acessos.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('SELECT COUNT(DISTINCT session_id) FROM acessos')
+    visitantes_unicos = cursor.fetchone()[0]
+    
+    cursor.execute('SELECT COUNT(*) FROM acessos')
+    page_views = cursor.fetchone()[0]
+    
+    cursor.execute('''
+        SELECT COUNT(DISTINCT session_id) FROM acessos 
+        WHERE DATE(timestamp) = DATE('now')
+    ''')
+    visitantes_hoje = cursor.fetchone()[0]
+    
+    conn.close()
+    return visitantes_unicos, page_views, visitantes_hoje
+
+def dashboard_acessos():
+    st.header("📊 Dashboard de Acessos")
+    
+    conn = sqlite3.connect('acessos.db')
+    df = pd.read_sql_query('''
+        SELECT timestamp, session_id 
+        FROM acessos 
+        ORDER BY timestamp DESC
+    ''', conn)
+    conn.close()
+    
+    if len(df) > 0:
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+        df['data'] = df['timestamp'].dt.date
+        
+        # Métricas principais
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total de Acessos", len(df))
+        with col2:
+            acessos_hoje = len(df[df['data'] == datetime.now().date()])
+            st.metric("Acessos Hoje", acessos_hoje)
+        with col3:
+            visitantes_unicos = df['session_id'].nunique()
+            st.metric("Visitantes Únicos", visitantes_unicos)
+        
+        # Gráfico de acessos por dia
+        acessos_por_dia = df.groupby('data').size().reset_index(name='acessos')
+        if len(acessos_por_dia) > 1:
+            fig = px.line(acessos_por_dia, x='data', y='acessos', 
+                         title='Acessos por Dia')
+            st.plotly_chart(fig, use_container_width=True)
+        
+        # Tabela de últimos acessos
+        st.subheader("Últimos 20 Acessos")
+        ultimos = df.head(20)[['timestamp']].copy()
+        ultimos['timestamp'] = ultimos['timestamp'].dt.strftime('%d/%m/%Y %H:%M:%S')
+        st.dataframe(ultimos, use_container_width=True)
+    else:
+        st.info("Nenhum acesso registrado ainda.")
+
+# INICIALIZAR CONTADOR
+inicializar_db()
+
+# Registrar acesso apenas uma vez por sessão
+if "acesso_registrado" not in st.session_state:
+    st.session_state.acesso_registrado = True
+    total_visitantes = registrar_acesso()
+
+
 #CSS
 
 with open('style.css') as f:
@@ -177,7 +292,7 @@ def pagina_chat():
         #st._rerun()
         
 def sidebar():
-    tabs_assistente = st.tabs(['Modelo de IA','RAG de dados'])
+    tabs_assistente = st.tabs(['Modelo de IA','RAG de dados', 'Estatísticas'])
     
     with tabs_assistente[0]:
         provedor = st.selectbox('Selecione a empresa criadora do modelo de IA', CONFIG_MODELOS.keys())
@@ -256,6 +371,70 @@ def sidebar():
 
         if st.button('🗑️ Limpar o histórico de conversação', use_container_width=True):
             st.session_state['memoria'] = MEMORIA
+
+
+    with tabs_assistente[2]:
+        # Nova tab para estatísticas
+        st.markdown("### 📊 Contador de Acessos")
+        
+        # Obter estatísticas
+        visitantes_unicos, page_views, visitantes_hoje = obter_estatisticas()
+        
+        # Exibir métricas principais
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("👥 Visitantes Únicos", visitantes_unicos)
+            st.metric("📈 Acessos Hoje", visitantes_hoje)
+        with col2:
+            st.metric("📊 Total Page Views", page_views)
+            
+            # Calcular média de acessos por dia (se houver dados)
+            if visitantes_unicos > 0:
+                conn = sqlite3.connect('acessos.db')
+                cursor = conn.cursor()
+                cursor.execute('SELECT COUNT(DISTINCT DATE(timestamp)) FROM acessos')
+                dias_com_acesso = cursor.fetchone()[0]
+                conn.close()
+                
+                if dias_com_acesso > 0:
+                    media_diaria = round(page_views / dias_com_acesso, 1)
+                    st.metric("📅 Média Diária", f"{media_diaria}")
+        
+        st.markdown("---")
+        
+        # Botão para dashboard completo
+       # if st.button("🔍 Ver Dashboard Detalhado", key="btn_dashboard"):
+        #    st.session_state.mostrar_dashboard = True
+        
+        # Mini gráfico na sidebar (opcional)
+        st.markdown("#### Últimos 7 dias")
+        
+        try:
+            conn = sqlite3.connect('acessos.db')
+            df_mini = pd.read_sql_query('''
+                SELECT DATE(timestamp) as data, COUNT(*) as acessos 
+                FROM acessos 
+                WHERE DATE(timestamp) >= DATE('now', '-7 days')
+                GROUP BY DATE(timestamp)
+                ORDER BY data DESC
+                LIMIT 7
+            ''', conn)
+            conn.close()
+            
+            if len(df_mini) > 0:
+                df_mini['data'] = pd.to_datetime(df_mini['data'])
+                fig_mini = px.bar(df_mini, x='data', y='acessos', 
+                                height=200, 
+                                title="Acessos (7 dias)")
+                fig_mini.update_layout(
+                    showlegend=False,
+                    margin=dict(l=0, r=0, t=30, b=0)
+                )
+                st.plotly_chart(fig_mini, use_container_width=True)
+            else:
+                st.info("Sem dados dos últimos 7 dias")
+        except Exception as e:
+            st.warning("Erro ao carregar gráfico mini")
 
 def main():
     

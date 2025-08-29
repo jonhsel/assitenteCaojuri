@@ -137,3 +137,4 @@ python-magic==0.4.27
 pytube==15.0.0
 gdown==5.2.0
 pydub==0.25.1
+plotly==6.3.0

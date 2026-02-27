@@ -620,82 +620,15 @@
 
     blockquote p { margin: 0; font-size: 1.05em; position: relative; }
 
-    /* ── CODE INLINE ── */
+    /* ── CODE ── */
     code {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82em;
-      background: #1e1e1e;
-      color: #f1f1f1;
+      background: var(--code-bg);
+      color: var(--code-text);
       padding: 2px 7px;
       border-radius: 3px;
     }
-
-    /* ── CODE BLOCK ── */
-    .code-block {
-      margin: 36px 0;
-      background: #0d1117;
-      border: 1px solid #2a2a2a;
-      overflow: hidden;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .code-block-header {
-      background: #161b22;
-      border-bottom: 1px solid #2a2a2a;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .code-dots { display: flex; gap: 6px; }
-    .code-dots span { width: 11px; height: 11px; border-radius: 50%; }
-    .code-dots span:nth-child(1) { background: #ff5f57; }
-    .code-dots span:nth-child(2) { background: #febc2e; }
-    .code-dots span:nth-child(3) { background: #28c840; }
-
-    .code-filename {
-      font-size: 11px;
-      color: #8b949e;
-      letter-spacing: 0.06em;
-      margin-left: 4px;
-    }
-
-    .code-lang {
-      margin-left: auto;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #3d8af7;
-      background: rgba(61,138,247,0.1);
-      border: 1px solid rgba(61,138,247,0.2);
-      padding: 2px 8px;
-    }
-
-    .code-body { padding: 20px 0; overflow-x: auto; }
-
-    .code-body pre {
-      margin: 0;
-      padding: 0 24px;
-      font-size: 13px;
-      line-height: 1.75;
-      color: #e6edf3;
-      tab-size: 4;
-    }
-
-    /* Syntax tokens */
-    .tk-kw  { color: #ff7b72; }
-    .tk-fn  { color: #d2a8ff; }
-    .tk-str { color: #a5d6ff; }
-    .tk-num { color: #79c0ff; }
-    .tk-cmt { color: #8b949e; font-style: italic; }
-    .tk-cls { color: #ffa657; }
-    .tk-var { color: #e6edf3; }
-    .tk-attr{ color: #79c0ff; }
-    .tk-dec { color: #ffa657; }
-    .tk-pun { color: #8b949e; }
-    .tk-self{ color: #ffa657; }
-    .tk-bool{ color: #79c0ff; }
 
     /* ── CALLOUT ── */
     .callout {
@@ -1456,33 +1389,6 @@
     </div>
   </div>
 
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — inicialização do LLM por provedor</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">def</span> <span class="tk-fn">inicializar_llm</span><span class="tk-pun">(</span><span class="tk-self">provedor</span><span class="tk-pun">,</span> <span class="tk-self">modelo</span><span class="tk-pun">,</span> <span class="tk-self">api_key</span><span class="tk-pun">):</span>
-    <span class="tk-kw">if</span> <span class="tk-self">provedor</span> <span class="tk-op">==</span> <span class="tk-str">"OpenAI"</span><span class="tk-pun">:</span>
-        <span class="tk-kw">return</span> <span class="tk-cls">ChatOpenAI</span><span class="tk-pun">(</span>
-            <span class="tk-attr">model</span><span class="tk-op">=</span><span class="tk-self">modelo</span><span class="tk-pun">,</span>
-            <span class="tk-attr">api_key</span><span class="tk-op">=</span><span class="tk-self">api_key</span><span class="tk-pun">,</span>
-            <span class="tk-attr">temperature</span><span class="tk-op">=</span><span class="tk-num">0.3</span>
-        <span class="tk-pun">)</span>
-    <span class="tk-kw">elif</span> <span class="tk-self">provedor</span> <span class="tk-op">==</span> <span class="tk-str">"Anthropic"</span><span class="tk-pun">:</span>
-        <span class="tk-kw">return</span> <span class="tk-cls">ChatAnthropic</span><span class="tk-pun">(</span>
-            <span class="tk-attr">model</span><span class="tk-op">=</span><span class="tk-self">modelo</span><span class="tk-pun">,</span>
-            <span class="tk-attr">api_key</span><span class="tk-op">=</span><span class="tk-self">api_key</span><span class="tk-pun">,</span>
-            <span class="tk-attr">temperature</span><span class="tk-op">=</span><span class="tk-num">0.3</span>
-        <span class="tk-pun">)</span>
-    <span class="tk-kw">elif</span> <span class="tk-self">provedor</span> <span class="tk-op">==</span> <span class="tk-str">"Google Gemini"</span><span class="tk-pun">:</span>
-        <span class="tk-kw">return</span> <span class="tk-cls">ChatGoogleGenerativeAI</span><span class="tk-pun">(</span>
-            <span class="tk-attr">model</span><span class="tk-op">=</span><span class="tk-self">modelo</span><span class="tk-pun">,</span>
-            <span class="tk-attr">google_api_key</span><span class="tk-op">=</span><span class="tk-self">api_key</span><span class="tk-pun">,</span>
-            <span class="tk-attr">temperature</span><span class="tk-op">=</span><span class="tk-num">0.3</span>
-        <span class="tk-pun">)</span></pre></div>
-  </div>
-
   <h3>Memória Conversacional</h3>
 
   <p class="fade-in">Um dos diferenciais críticos da JúrIA é o suporte a <strong>memória de conversa persistente</strong>, implementado via <code>ConversationBufferMemory</code> do LangChain. Isso significa que a JúrIA não apenas responde perguntas isoladas — ela acompanha o raciocínio ao longo de toda a sessão, compreendendo referências a respostas anteriores e refinamentos progressivos da consulta.</p>
@@ -1491,35 +1397,6 @@
 
   <div class="callout-inline fade-in">
     Essa abordagem é <strong>especialmente valiosa no contexto jurídico</strong>, onde uma análise evolui progressivamente — primeiro uma pergunta geral sobre o caso, depois aprofundamentos em pontos específicos, depois comparações com outros precedentes, tudo sem perder o fio condutor da consulta.
-  </div>
-
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — memória conversacional e prompt</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">from</span> <span class="tk-cls">langchain.memory</span> <span class="tk-kw">import</span> <span class="tk-cls">ConversationBufferMemory</span>
-<span class="tk-kw">from</span> <span class="tk-cls">langchain.prompts</span> <span class="tk-kw">import</span> <span class="tk-cls">ChatPromptTemplate</span><span class="tk-pun">,</span> <span class="tk-cls">MessagesPlaceholder</span>
-
-<span class="tk-cmt"># Memória da sessão — descartada automaticamente ao encerrar</span>
-<span class="tk-var">memory</span> <span class="tk-op">=</span> <span class="tk-cls">ConversationBufferMemory</span><span class="tk-pun">(</span>
-    <span class="tk-attr">memory_key</span><span class="tk-op">=</span><span class="tk-str">"historico"</span><span class="tk-pun">,</span>
-    <span class="tk-attr">return_messages</span><span class="tk-op">=</span><span class="tk-bool">True</span>
-<span class="tk-pun">)</span>
-
-<span class="tk-var">prompt</span> <span class="tk-op">=</span> <span class="tk-cls">ChatPromptTemplate</span><span class="tk-pun">.</span><span class="tk-fn">from_messages</span><span class="tk-pun">([</span>
-    <span class="tk-pun">(</span><span class="tk-str">"system"</span><span class="tk-pun">,</span>
-     <span class="tk-str">"""Você é a JúrIA, assistente jurídica especializada do CAOJÚRI.
-Responda com base EXCLUSIVAMENTE no documento a seguir:
-
-{documento}
-
-Seja precisa, cite os trechos relevantes e indique quando
-uma informação não está disponível no documento."""</span><span class="tk-pun">),</span>
-    <span class="tk-cls">MessagesPlaceholder</span><span class="tk-pun">(</span><span class="tk-attr">variable_name</span><span class="tk-op">=</span><span class="tk-str">"historico"</span><span class="tk-pun">),</span>
-    <span class="tk-pun">(</span><span class="tk-str">"human"</span><span class="tk-pun">,</span> <span class="tk-str">"{pergunta}"</span><span class="tk-pun">),</span>
-<span class="tk-pun">])</span></pre></div>
   </div>
 
   <h3>Painel de Estatísticas e Auditoria</h3>
@@ -1581,49 +1458,11 @@ uma informação não está disponível no documento."""</span><span class="tk-p
   <p class="fade-in">Um recurso particularmente poderoso da JúrIA é a capacidade de <strong>transcrever automaticamente conteúdo audiovisual</strong>. Ao carregar um arquivo MP4 ou informar uma URL do YouTube, o sistema extrai o áudio, divide-o em segmentos de 60 segundos, e utiliza o reconhecimento de fala do Google para produzir uma transcrição completa em português — que pode então ser consultada conversacionalmente, ou exportada em formatos <code>.txt</code> ou <code>.srt</code> (legendas) para uso posterior.</p>
 
   <p class="fade-in">Isso é especialmente relevante para o CAOJÚRI ao lidar com gravações de capacitações, seminários jurídicos, ou mesmo vídeos de plenário do júri que precisam ser analisados e referenciados.</p>
-
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">loaders.py — transcrição de MP4 em chunks de 60s</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">from</span> <span class="tk-cls">moviepy.editor</span> <span class="tk-kw">import</span> <span class="tk-cls">VideoFileClip</span>
-<span class="tk-kw">from</span> <span class="tk-cls">pydub</span> <span class="tk-kw">import</span> <span class="tk-cls">AudioSegment</span>
-<span class="tk-kw">import</span> <span class="tk-cls">speech_recognition</span> <span class="tk-kw">as</span> <span class="tk-var">sr</span>
-
-<span class="tk-kw">def</span> <span class="tk-fn">transcrever_mp4</span><span class="tk-pun">(</span><span class="tk-self">caminho_video</span><span class="tk-pun">):</span>
-    <span class="tk-cmt"># 1. Extrai áudio do vídeo</span>
-    <span class="tk-var">clip</span> <span class="tk-op">=</span> <span class="tk-cls">VideoFileClip</span><span class="tk-pun">(</span><span class="tk-self">caminho_video</span><span class="tk-pun">)</span>
-    <span class="tk-var">clip</span><span class="tk-pun">.</span><span class="tk-fn">audio</span><span class="tk-pun">.</span><span class="tk-fn">write_audiofile</span><span class="tk-pun">(</span><span class="tk-str">"audio_temp.wav"</span><span class="tk-pun">)</span>
-
-    <span class="tk-cmt"># 2. Divide em segmentos de 60 segundos</span>
-    <span class="tk-var">audio</span> <span class="tk-op">=</span> <span class="tk-cls">AudioSegment</span><span class="tk-pun">.</span><span class="tk-fn">from_wav</span><span class="tk-pun">(</span><span class="tk-str">"audio_temp.wav"</span><span class="tk-pun">)</span>
-    <span class="tk-var">chunk_ms</span> <span class="tk-op">=</span> <span class="tk-num">60_000</span>
-    <span class="tk-var">chunks</span> <span class="tk-op">=</span> <span class="tk-pun">[</span><span class="tk-var">audio</span><span class="tk-pun">[</span><span class="tk-var">i</span><span class="tk-pun">:</span><span class="tk-var">i</span><span class="tk-op">+</span><span class="tk-var">chunk_ms</span><span class="tk-pun">]</span> <span class="tk-kw">for</span> <span class="tk-var">i</span> <span class="tk-kw">in</span> <span class="tk-fn">range</span><span class="tk-pun">(</span><span class="tk-num">0</span><span class="tk-pun">,</span> <span class="tk-fn">len</span><span class="tk-pun">(</span><span class="tk-var">audio</span><span class="tk-pun">),</span> <span class="tk-var">chunk_ms</span><span class="tk-pun">)]</span>
-
-    <span class="tk-cmt"># 3. Reconhecimento de fala em pt-BR por chunk</span>
-    <span class="tk-var">recognizer</span> <span class="tk-op">=</span> <span class="tk-cls">sr</span><span class="tk-pun">.</span><span class="tk-cls">Recognizer</span><span class="tk-pun">()</span>
-    <span class="tk-var">transcricao</span> <span class="tk-op">=</span> <span class="tk-pun">[]</span>
-    <span class="tk-kw">for</span> <span class="tk-var">chunk</span> <span class="tk-kw">in</span> <span class="tk-var">chunks</span><span class="tk-pun">:</span>
-        <span class="tk-var">chunk</span><span class="tk-pun">.</span><span class="tk-fn">export</span><span class="tk-pun">(</span><span class="tk-str">"chunk.wav"</span><span class="tk-pun">,</span> <span class="tk-attr">format</span><span class="tk-op">=</span><span class="tk-str">"wav"</span><span class="tk-pun">)</span>
-        <span class="tk-kw">with</span> <span class="tk-cls">sr</span><span class="tk-pun">.</span><span class="tk-cls">AudioFile</span><span class="tk-pun">(</span><span class="tk-str">"chunk.wav"</span><span class="tk-pun">)</span> <span class="tk-kw">as</span> <span class="tk-var">source</span><span class="tk-pun">:</span>
-            <span class="tk-var">audio_data</span> <span class="tk-op">=</span> <span class="tk-var">recognizer</span><span class="tk-pun">.</span><span class="tk-fn">record</span><span class="tk-pun">(</span><span class="tk-var">source</span><span class="tk-pun">)</span>
-            <span class="tk-kw">try</span><span class="tk-pun">:</span>
-                <span class="tk-var">texto</span> <span class="tk-op">=</span> <span class="tk-var">recognizer</span><span class="tk-pun">.</span><span class="tk-fn">recognize_google</span><span class="tk-pun">(</span>
-                    <span class="tk-var">audio_data</span><span class="tk-pun">,</span> <span class="tk-attr">language</span><span class="tk-op">=</span><span class="tk-str">"pt-BR"</span>
-                <span class="tk-pun">)</span>
-                <span class="tk-var">transcricao</span><span class="tk-pun">.</span><span class="tk-fn">append</span><span class="tk-pun">(</span><span class="tk-var">texto</span><span class="tk-pun">)</span>
-            <span class="tk-kw">except</span> <span class="tk-cls">sr</span><span class="tk-pun">.</span><span class="tk-cls">UnknownValueError</span><span class="tk-pun">:</span>
-                <span class="tk-kw">pass</span>
-
-    <span class="tk-kw">return</span> <span class="tk-str">" "</span><span class="tk-pun">.</span><span class="tk-fn">join</span><span class="tk-pun">(</span><span class="tk-var">transcricao</span><span class="tk-pun">)</span></pre></div>
-  </div>
-  <div class="header-ornament">⚖
+   <div class="header-ornament">⚖
       <figure style="margin-top:24px;">
         <img src="images/11.png" alt="Assistente Jurídico - diagrama" style="width:100%;max-width:720px;height:auto;border-radius:8px;display:block;margin:0 auto;box-shadow:0 8px 24px rgba(26,20,16,0.12);">
       </figure>
-  </div>
+    </div>
   <div class="ornament fade-in">— ✦ —</div>
 
   <!-- ── SEÇÃO 5 ── -->
@@ -1666,37 +1505,6 @@ uma informação não está disponível no documento."""</span><span class="tk-p
 
   <p class="fade-in">A flexibilidade na escolha do modelo é estrategicamente importante. Diferentes tarefas podem exigir diferentes capacidades — uma pesquisa rápida de jurisprudência pode ser tratada por um modelo menor e mais ágil, enquanto a análise de uma peça processual complexa pode demandar o modelo mais capaz disponível. O usuário escolhe conforme a necessidade e o orçamento disponível.</p>
 
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — seleção de modelo em tempo real via sidebar</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-cmt"># Mapa de modelos por provedor</span>
-<span class="tk-var">MODELOS</span> <span class="tk-op">=</span> <span class="tk-pun">{</span>
-    <span class="tk-str">"OpenAI"</span><span class="tk-pun">:</span>         <span class="tk-pun">[</span><span class="tk-str">"gpt-4.1"</span><span class="tk-pun">,</span> <span class="tk-str">"gpt-4.1-mini"</span><span class="tk-pun">,</span> <span class="tk-str">"gpt-4.1-nano"</span><span class="tk-pun">],</span>
-    <span class="tk-str">"Anthropic"</span><span class="tk-pun">:</span>       <span class="tk-pun">[</span><span class="tk-str">"claude-sonnet-4-20250514"</span><span class="tk-pun">,</span> <span class="tk-str">"claude-3-5-haiku-latest"</span><span class="tk-pun">],</span>
-    <span class="tk-str">"Google Gemini"</span><span class="tk-pun">:</span>   <span class="tk-pun">[</span><span class="tk-str">"gemini-2.5-pro"</span><span class="tk-pun">,</span> <span class="tk-str">"gemini-2.5-flash"</span><span class="tk-pun">,</span> <span class="tk-str">"gemini-2.5-flash-lite"</span><span class="tk-pun">],</span>
-<span class="tk-pun">}</span>
-
-<span class="tk-cmt"># Sidebar de seleção — Streamlit</span>
-<span class="tk-kw">with</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">sidebar</span><span class="tk-pun">:</span>
-    <span class="tk-var">provedor</span> <span class="tk-op">=</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">selectbox</span><span class="tk-pun">(</span>
-        <span class="tk-str">"Provedor de IA"</span><span class="tk-pun">,</span>
-        <span class="tk-fn">list</span><span class="tk-pun">(</span><span class="tk-var">MODELOS</span><span class="tk-pun">.</span><span class="tk-fn">keys</span><span class="tk-pun">())</span>
-    <span class="tk-pun">)</span>
-    <span class="tk-var">modelo</span> <span class="tk-op">=</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">selectbox</span><span class="tk-pun">(</span>
-        <span class="tk-str">"Modelo"</span><span class="tk-pun">,</span>
-        <span class="tk-var">MODELOS</span><span class="tk-pun">[</span><span class="tk-var">provedor</span><span class="tk-pun">]</span>
-    <span class="tk-pun">)</span>
-    <span class="tk-var">api_key</span> <span class="tk-op">=</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">text_input</span><span class="tk-pun">(</span>
-        <span class="tk-str">"Chave de API"</span><span class="tk-pun">,</span>
-        <span class="tk-attr">type</span><span class="tk-op">=</span><span class="tk-str">"password"</span>   <span class="tk-cmt"># nunca persiste — apenas session_state</span>
-    <span class="tk-pun">)</span>
-
-<span class="tk-var">llm</span> <span class="tk-op">=</span> <span class="tk-fn">inicializar_llm</span><span class="tk-pun">(</span><span class="tk-var">provedor</span><span class="tk-pun">,</span> <span class="tk-var">modelo</span><span class="tk-pun">,</span> <span class="tk-var">api_key</span><span class="tk-pun">)</span></pre></div>
-  </div>
-
   <div class="ornament fade-in">— ✦ —</div>
 
   <!-- ── SEÇÃO 6 ── -->
@@ -1733,41 +1541,6 @@ uma informação não está disponível no documento."""</span><span class="tk-p
     <p>Como o LLM baseia suas respostas no documento explicitamente fornecido, o operador do direito tem condições de <strong>verificar e rastrear</strong> as afirmações feitas pela JúrIA — um requisito essencial em contextos jurídicos onde a precisão da fonte importa tanto quanto a informação em si.</p>
   </div>
 
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — pipeline RAG completo</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">from</span> <span class="tk-cls">langchain.chains</span> <span class="tk-kw">import</span> <span class="tk-cls">LLMChain</span>
-
-<span class="tk-kw">def</span> <span class="tk-fn">carregar_documento</span><span class="tk-pun">(</span><span class="tk-self">tipo_fonte</span><span class="tk-pun">,</span> <span class="tk-self">entrada</span><span class="tk-pun">):</span>
-    <span class="tk-cmt">"""Roteia para o loader correto conforme o tipo de fonte."""</span>
-    <span class="tk-var">loaders</span> <span class="tk-op">=</span> <span class="tk-pun">{</span>
-        <span class="tk-str">"PDF"</span><span class="tk-pun">:</span>          <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-cls">PyPDFLoader</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">).</span><span class="tk-fn">load</span><span class="tk-pun">(),</span>
-        <span class="tk-str">"Site"</span><span class="tk-pun">:</span>         <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-cls">WebBaseLoader</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">).</span><span class="tk-fn">load</span><span class="tk-pun">(),</span>
-        <span class="tk-str">"YouTube"</span><span class="tk-pun">:</span>      <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-fn">carregar_youtube</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">),</span>
-        <span class="tk-str">"MP4"</span><span class="tk-pun">:</span>          <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-fn">transcrever_mp4</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">),</span>
-        <span class="tk-str">"Notion"</span><span class="tk-pun">:</span>       <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-fn">carregar_notion</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">),</span>
-        <span class="tk-str">"Google Drive"</span><span class="tk-pun">:</span> <span class="tk-kw">lambda</span><span class="tk-pun">:</span> <span class="tk-fn">carregar_gdrive</span><span class="tk-pun">(</span><span class="tk-self">entrada</span><span class="tk-pun">),</span>
-    <span class="tk-pun">}</span>
-    <span class="tk-kw">return</span> <span class="tk-var">loaders</span><span class="tk-pun">[</span><span class="tk-self">tipo_fonte</span><span class="tk-pun">]()</span>
-
-<span class="tk-cmt"># Construção da chain com memória e LLM selecionado</span>
-<span class="tk-var">chain</span> <span class="tk-op">=</span> <span class="tk-cls">LLMChain</span><span class="tk-pun">(</span>
-    <span class="tk-attr">llm</span><span class="tk-op">=</span><span class="tk-var">llm</span><span class="tk-pun">,</span>
-    <span class="tk-attr">prompt</span><span class="tk-op">=</span><span class="tk-var">prompt</span><span class="tk-pun">,</span>
-    <span class="tk-attr">memory</span><span class="tk-op">=</span><span class="tk-var">memory</span><span class="tk-pun">,</span>
-    <span class="tk-attr">verbose</span><span class="tk-op">=</span><span class="tk-bool">False</span>
-<span class="tk-pun">)</span>
-
-<span class="tk-cmt"># Invocação — documento injetado, pergunta do usuário processada</span>
-<span class="tk-var">resposta</span> <span class="tk-op">=</span> <span class="tk-var">chain</span><span class="tk-pun">.</span><span class="tk-fn">invoke</span><span class="tk-pun">({</span>
-    <span class="tk-str">"documento"</span><span class="tk-pun">:</span> <span class="tk-var">conteudo_carregado</span><span class="tk-pun">,</span>
-    <span class="tk-str">"pergunta"</span><span class="tk-pun">:</span>  <span class="tk-var">pergunta_usuario</span>
-<span class="tk-pun">})</span></pre></div>
-  </div>
-
   <div class="ornament fade-in">— ✦ —</div>
 
   <!-- ── SEÇÃO 7 — SEGURANÇA E PRIVACIDADE ── -->
@@ -1802,30 +1575,6 @@ uma informação não está disponível no documento."""</span><span class="tk-p
   <div class="callout-shield fade-in">
     <div class="callout-label">Princípio de Privacidade</div>
     <p>Em cada sessão da JúrIA, o documento carregado e as perguntas realizadas existem <strong>exclusivamente no contexto daquela janela de trabalho</strong>. Ao encerrar a sessão, a memória é zerada. Nenhuma peça processual, nenhuma orientação estratégica e nenhuma pergunta do promotor persiste no sistema além do tempo de uso.</p>
-  </div>
-
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — limpeza total da sessão</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">def</span> <span class="tk-fn">limpar_sessao</span><span class="tk-pun">():</span>
-    <span class="tk-cmt">"""Apaga toda a memória da sessão ativa. Nenhum dado persiste."""</span>
-    <span class="tk-var">chaves_a_remover</span> <span class="tk-op">=</span> <span class="tk-pun">[</span>
-        <span class="tk-str">"historico"</span><span class="tk-pun">,</span>       <span class="tk-cmt"># histórico de mensagens</span>
-        <span class="tk-str">"documento"</span><span class="tk-pun">,</span>       <span class="tk-cmt"># conteúdo carregado</span>
-        <span class="tk-str">"chain"</span><span class="tk-pun">,</span>           <span class="tk-cmt"># instância da chain LangChain</span>
-        <span class="tk-str">"api_key"</span><span class="tk-pun">,</span>         <span class="tk-cmt"># chave de API nunca persiste além da sessão</span>
-        <span class="tk-str">"assistente_ativo"</span><span class="tk-pun">,</span>
-    <span class="tk-pun">]</span>
-    <span class="tk-kw">for</span> <span class="tk-var">chave</span> <span class="tk-kw">in</span> <span class="tk-var">chaves_a_remover</span><span class="tk-pun">:</span>
-        <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-var">session_state</span><span class="tk-pun">.</span><span class="tk-fn">pop</span><span class="tk-pun">(</span><span class="tk-var">chave</span><span class="tk-pun">,</span> <span class="tk-bool">None</span><span class="tk-pun">)</span>
-    <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">rerun</span><span class="tk-pun">()</span>   <span class="tk-cmt"># interface reiniciada — sem rastros</span>
-
-<span class="tk-cmt"># Botão na sidebar</span>
-<span class="tk-kw">if</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-fn">button</span><span class="tk-pun">(</span><span class="tk-str">"🧹 Limpar histórico de conversação"</span><span class="tk-pun">):</span>
-    <span class="tk-fn">limpar_sessao</span><span class="tk-pun">()</span></pre></div>
   </div>
 
   <h3>O que a JúrIA Salva — e o que Não Salva</h3>
@@ -1933,34 +1682,6 @@ uma informação não está disponível no documento."""</span><span class="tk-p
 
   <p class="fade-in">Isso coloca o controle total de custo e acesso nas mãos do usuário: ele utiliza sua própria conta no provedor de IA, tem visibilidade direta sobre o uso e pode revogar o acesso a qualquer momento pelo painel do provedor, sem qualquer dependência da JúrIA.</p>
 
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">assistenteCaojuri.py — registro anônimo de acessos (SQLite)</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">import</span> <span class="tk-cls">sqlite3</span><span class="tk-pun">,</span> <span class="tk-cls">uuid</span>
-<span class="tk-kw">from</span> <span class="tk-cls">datetime</span> <span class="tk-kw">import</span> <span class="tk-cls">datetime</span>
-
-<span class="tk-kw">def</span> <span class="tk-fn">registrar_acesso</span><span class="tk-pun">():</span>
-    <span class="tk-cmt">"""Persiste APENAS metadados anônimos — nenhum conteúdo jurídico."""</span>
-    <span class="tk-kw">if</span> <span class="tk-str">"session_id"</span> <span class="tk-kw">not</span> <span class="tk-kw">in</span> <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-var">session_state</span><span class="tk-pun">:</span>
-        <span class="tk-cmt"># UUID gerado por sessão — sem vínculo com identidade do usuário</span>
-        <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-var">session_state</span><span class="tk-pun">.</span><span class="tk-var">session_id</span> <span class="tk-op">=</span> <span class="tk-fn">str</span><span class="tk-pun">(</span><span class="tk-cls">uuid</span><span class="tk-pun">.</span><span class="tk-fn">uuid4</span><span class="tk-pun">())</span>
-
-    <span class="tk-var">conn</span> <span class="tk-op">=</span> <span class="tk-cls">sqlite3</span><span class="tk-pun">.</span><span class="tk-fn">connect</span><span class="tk-pun">(</span><span class="tk-str">"acessos.db"</span><span class="tk-pun">)</span>
-    <span class="tk-var">conn</span><span class="tk-pun">.</span><span class="tk-fn">execute</span><span class="tk-pun">(</span><span class="tk-str">"""
-        INSERT INTO acessos (session_id, timestamp)
-        VALUES (?, ?)
-    """</span><span class="tk-pun">,</span> <span class="tk-pun">(</span>
-        <span class="tk-var">st</span><span class="tk-pun">.</span><span class="tk-var">session_state</span><span class="tk-pun">.</span><span class="tk-var">session_id</span><span class="tk-pun">,</span>
-        <span class="tk-cls">datetime</span><span class="tk-pun">.</span><span class="tk-fn">now</span><span class="tk-pun">().</span><span class="tk-fn">isoformat</span><span class="tk-pun">()</span>
-    <span class="tk-pun">))</span>
-    <span class="tk-var">conn</span><span class="tk-pun">.</span><span class="tk-fn">commit</span><span class="tk-pun">()</span>
-    <span class="tk-var">conn</span><span class="tk-pun">.</span><span class="tk-fn">close</span><span class="tk-pun">()</span>
-    <span class="tk-cmt"># ↑ Apenas session_id + timestamp gravados. Zero conteúdo jurídico.</span></pre></div>
-  </div>
-
   <div class="ornament fade-in">— ✦ —</div>
 
   <!-- ── SEÇÃO 8 ── -->
@@ -2024,45 +1745,6 @@ uma informação não está disponível no documento."""</span><span class="tk-p
   </table>
 
   <p class="fade-in">A configuração da integração é simplificada ao máximo: as credenciais (chave de API e ID da página ou banco de dados) são definidas uma única vez no arquivo <code>.env</code> da aplicação. O promotor simplesmente seleciona "Notion" no menu e clica em iniciar — a JúrIA recupera automaticamente todo o conteúdo disponível e está pronta para responder consultas sobre a base institucional do CAOJÚRI.</p>
-
-  <div class="code-block fade-in">
-    <div class="code-block-header">
-      <div class="code-dots"><span></span><span></span><span></span></div>
-      <span class="code-filename">loaders.py — paginação automática do banco de dados Notion</span>
-      <span class="code-lang">Python</span>
-    </div>
-    <div class="code-body"><pre><span class="tk-kw">from</span> <span class="tk-cls">notion_client</span> <span class="tk-kw">import</span> <span class="tk-cls">Client</span>
-
-<span class="tk-kw">def</span> <span class="tk-fn">carregar_notion_database</span><span class="tk-pun">(</span><span class="tk-self">database_id</span><span class="tk-pun">):</span>
-    <span class="tk-var">client</span> <span class="tk-op">=</span> <span class="tk-cls">Client</span><span class="tk-pun">(</span><span class="tk-attr">auth</span><span class="tk-op">=</span><span class="tk-var">NOTION_API_KEY</span><span class="tk-pun">)</span>
-    <span class="tk-var">registros</span><span class="tk-pun">,</span> <span class="tk-var">cursor</span> <span class="tk-op">=</span> <span class="tk-pun">[],</span> <span class="tk-bool">None</span>
-
-    <span class="tk-cmt"># Percorre todas as páginas do banco — sem limite de entradas</span>
-    <span class="tk-kw">while</span> <span class="tk-bool">True</span><span class="tk-pun">:</span>
-        <span class="tk-var">params</span> <span class="tk-op">=</span> <span class="tk-pun">{</span><span class="tk-str">"database_id"</span><span class="tk-pun">:</span> <span class="tk-self">database_id</span><span class="tk-pun">}</span>
-        <span class="tk-kw">if</span> <span class="tk-var">cursor</span><span class="tk-pun">:</span>
-            <span class="tk-var">params</span><span class="tk-pun">[</span><span class="tk-str">"start_cursor"</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-var">cursor</span>
-
-        <span class="tk-var">resp</span> <span class="tk-op">=</span> <span class="tk-var">client</span><span class="tk-pun">.</span><span class="tk-var">databases</span><span class="tk-pun">.</span><span class="tk-fn">query</span><span class="tk-pun">(</span><span class="tk-op">**</span><span class="tk-var">params</span><span class="tk-pun">)</span>
-        <span class="tk-var">registros</span><span class="tk-pun">.</span><span class="tk-fn">extend</span><span class="tk-pun">(</span><span class="tk-var">resp</span><span class="tk-pun">[</span><span class="tk-str">"results"</span><span class="tk-pun">])</span>
-
-        <span class="tk-kw">if</span> <span class="tk-kw">not</span> <span class="tk-var">resp</span><span class="tk-pun">.</span><span class="tk-fn">get</span><span class="tk-pun">(</span><span class="tk-str">"has_more"</span><span class="tk-pun">):</span>
-            <span class="tk-kw">break</span>
-        <span class="tk-var">cursor</span> <span class="tk-op">=</span> <span class="tk-var">resp</span><span class="tk-pun">[</span><span class="tk-str">"next_cursor"</span><span class="tk-pun">]</span>
-
-    <span class="tk-kw">return</span> <span class="tk-pun">[</span><span class="tk-fn">extrair_propriedades</span><span class="tk-pun">(</span><span class="tk-var">r</span><span class="tk-pun">)</span> <span class="tk-kw">for</span> <span class="tk-var">r</span> <span class="tk-kw">in</span> <span class="tk-var">registros</span><span class="tk-pun">]</span>
-
-<span class="tk-kw">def</span> <span class="tk-fn">extrair_propriedades</span><span class="tk-pun">(</span><span class="tk-self">pagina</span><span class="tk-pun">):</span>
-    <span class="tk-var">resultado</span> <span class="tk-op">=</span> <span class="tk-pun">{}</span>
-    <span class="tk-kw">for</span> <span class="tk-var">nome</span><span class="tk-pun">,</span> <span class="tk-var">prop</span> <span class="tk-kw">in</span> <span class="tk-self">pagina</span><span class="tk-pun">[</span><span class="tk-str">"properties"</span><span class="tk-pun">].</span><span class="tk-fn">items</span><span class="tk-pun">():</span>
-        <span class="tk-var">tipo</span> <span class="tk-op">=</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"type"</span><span class="tk-pun">]</span>
-        <span class="tk-kw">if</span>   <span class="tk-var">tipo</span> <span class="tk-op">==</span> <span class="tk-str">"title"</span><span class="tk-pun">:</span>     <span class="tk-var">resultado</span><span class="tk-pun">[</span><span class="tk-var">nome</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"title"</span><span class="tk-pun">][</span><span class="tk-num">0</span><span class="tk-pun">][</span><span class="tk-str">"plain_text"</span><span class="tk-pun">]</span>
-        <span class="tk-kw">elif</span> <span class="tk-var">tipo</span> <span class="tk-op">==</span> <span class="tk-str">"rich_text"</span><span class="tk-pun">:</span> <span class="tk-var">resultado</span><span class="tk-pun">[</span><span class="tk-var">nome</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"rich_text"</span><span class="tk-pun">][</span><span class="tk-num">0</span><span class="tk-pun">][</span><span class="tk-str">"plain_text"</span><span class="tk-pun">]</span>
-        <span class="tk-kw">elif</span> <span class="tk-var">tipo</span> <span class="tk-op">==</span> <span class="tk-str">"select"</span><span class="tk-pun">:</span>    <span class="tk-var">resultado</span><span class="tk-pun">[</span><span class="tk-var">nome</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"select"</span><span class="tk-pun">][</span><span class="tk-str">"name"</span><span class="tk-pun">]</span>
-        <span class="tk-kw">elif</span> <span class="tk-var">tipo</span> <span class="tk-op">==</span> <span class="tk-str">"checkbox"</span><span class="tk-pun">:</span>  <span class="tk-var">resultado</span><span class="tk-pun">[</span><span class="tk-var">nome</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-str">"Sim"</span> <span class="tk-kw">if</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"checkbox"</span><span class="tk-pun">]</span> <span class="tk-kw">else</span> <span class="tk-str">"Não"</span>
-        <span class="tk-kw">elif</span> <span class="tk-var">tipo</span> <span class="tk-op">==</span> <span class="tk-str">"date"</span><span class="tk-pun">:</span>      <span class="tk-var">resultado</span><span class="tk-pun">[</span><span class="tk-var">nome</span><span class="tk-pun">]</span> <span class="tk-op">=</span> <span class="tk-var">prop</span><span class="tk-pun">[</span><span class="tk-str">"date"</span><span class="tk-pun">][</span><span class="tk-str">"start"</span><span class="tk-pun">]</span>
-    <span class="tk-kw">return</span> <span class="tk-var">resultado</span></pre></div>
-  </div>
 
   <div class="callout-inline fade-in">
     <strong>Caso de uso concreto:</strong> O CAOJÚRI mantém no Notion um banco de dados de orientações sobre teses de acusação em casos de crimes dolosos contra a vida. Com a integração da JúrIA, um promotor pode perguntar diretamente: <em>"Qual é a orientação do CAOJÚRI para a abordagem de legítima defesa em casos de violência doméstica?"</em> — e receber a resposta fundamentada no conteúdo institucional atualizado.

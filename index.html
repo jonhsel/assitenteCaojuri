@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JúrIA — Assistente Jurídico Inteligente do CAOJÚRI · MPMA · Segurança e Privacidade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #111111;
+      --ink-light:  #444444;
+      --bg:         #ffffff;
+      --warm-mid:   #f7f7f7;
+      --accent:     #1a3a7c;
+      --accent-2:   #c0000a;
+      --accent-3:   #2a6bbe;
+      --rule:       #dddddd;
+      --code-bg:    #1e1e1e;
+      --code-text:  #f1f1f1;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--ink);
+      color: #fff;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle at top right, rgba(26,58,124,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Scales of justice decorative */
+    header::before {
+      content: '⚖';
+      position: absolute;
+      bottom: -30px; right: 40px;
+      font-size: 14rem;
+      opacity: 0.03;
+      color: #fff;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 72px 40px 60px;
+    }
+
+    .header-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6a9fd8;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #6a9fd8;
+      opacity: 0.45;
+      max-width: 80px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.1rem, 5vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: #6a9fd8;
+    }
+
+    .header-subtitle {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.3rem;
+      margin-bottom: 36px;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* Hero banner logos */
+    .header-logos {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+      padding: 20px 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      flex-wrap: wrap;
+    }
+
+    .header-logos-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-badge .badge-icon {
+      font-size: 1.8rem;
+    }
+
+    .logo-badge .badge-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .logo-badge .badge-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .logo-sep {
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 24px;
+    }
+
+    .byline-avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .byline-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .byline-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      font-style: italic;
+    }
+
+    .byline-text strong {
+      display: block;
+      color: #fff;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress {
+      position: fixed; top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      width: 0%;
+      z-index: 999;
+      transition: width 0.1s linear;
+    }
+
+    /* ── TOC ── */
+    nav.toc {
+      background: var(--warm-mid);
+      border-left: 3px solid var(--accent);
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 40px;
+    }
+
+    nav.toc h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    nav.toc ol {
+      list-style: none;
+      counter-reset: toc;
+    }
+
+    nav.toc li {
+      counter-increment: toc;
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      padding: 4px 0;
+      border-bottom: 1px dotted var(--rule);
+    }
+
+    nav.toc li:last-child { border-bottom: none; }
+
+    nav.toc li::before {
+      content: counter(toc, decimal-leading-zero);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    nav.toc a {
+      color: var(--ink-light);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+
+    nav.toc a:hover { color: var(--accent); }
+
+    /* ── ARTICLE BODY ── */
+    .article-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 40px 80px;
+    }
+
+    .lead {
+      font-size: 1.2em;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--ink-light);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 40px;
+      margin-bottom: 56px;
+    }
+
+    .lead strong { color: var(--ink); font-weight: 600; }
+
+    /* ── SECTION HEADINGS ── */
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--ink);
+      margin: 64px 0 24px;
+      padding-top: 48px;
+      border-top: 2px solid var(--ink);
+      position: relative;
+    }
+
+    h2::before {
+      content: attr(data-num);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+      margin: 40px 0 16px;
+    }
+
+    p { margin-bottom: 1.5em; }
+    p:last-child { margin-bottom: 0; }
+
+    strong { font-weight: 600; color: var(--ink); }
+    em { font-style: italic; }
+
+    /* ── ARCH LAYERS ── */
+    .layers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+      margin: 36px 0 48px;
+      border: 1px solid var(--rule);
+      overflow: hidden;
+    }
+
+    .layer-card {
+      padding: 26px 20px;
+      border-right: 1px solid var(--rule);
+      position: relative;
+      background: #fff;
+      transition: background 0.2s;
+    }
+
+    .layer-card:last-child { border-right: none; }
+    .layer-card:hover { background: #f0f4ff; }
+
+    .layer-card::before {
+      content: '';
+      display: block;
+      height: 3px;
+      width: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      background: var(--accent);
+      opacity: 0.25;
+    }
+
+    .layer-card:nth-child(1)::before { opacity: 0.2; }
+    .layer-card:nth-child(2)::before { opacity: 0.4; }
+    .layer-card:nth-child(3)::before { opacity: 0.6; }
+    .layer-card:nth-child(4)::before { opacity: 0.9; }
+
+    .layer-icon {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .layer-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .layer-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .layer-desc {
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.6;
+    }
+
+    /* ── FLOW STEPS ── */
+    .flow-steps {
+      counter-reset: step;
+      list-style: none;
+      margin: 28px 0;
+    }
+
+    .flow-steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 15.5px;
+      line-height: 1.65;
+    }
+
+    .flow-steps li:last-child { border-bottom: none; }
+
+    .flow-steps li::before {
+      content: counter(step, decimal-leading-zero);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      flex-shrink: 0;
+      padding-top: 3px;
+      min-width: 24px;
+    }
+
+    /* ── TECH GRID ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 36px 0 48px;
+    }
+
+    .tech-card {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-top: 4px solid var(--rule);
+      padding: 24px 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+    }
+
+    .tech-card.openai   { border-top-color: #10a37f; }
+    .tech-card.anthropic{ border-top-color: #c0000a; }
+    .tech-card.google   { border-top-color: #4285f4; }
+    .tech-card.langchain{ border-top-color: var(--accent); }
+    .tech-card.streamlit{ border-top-color: #ff4b4b; }
+    .tech-card.notion   { border-top-color: var(--ink); }
+
+    .tech-card .card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .tech-card.openai    .card-tag { color: #10a37f; }
+    .tech-card.anthropic .card-tag { color: #c0000a; }
+    .tech-card.google    .card-tag { color: #4285f4; }
+    .tech-card.langchain .card-tag { color: var(--accent); }
+    .tech-card.streamlit .card-tag { color: #ff4b4b; }
+    .tech-card.notion    .card-tag { color: var(--ink); }
+
+    .tech-card .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .tech-card .card-desc {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-weight: 300;
+    }
+
+    .card-divider {
+      border: none;
+      border-top: 1px dashed var(--rule);
+      margin: 12px 0;
+    }
+
+    .card-pro, .card-con {
+      font-size: 13px;
+      line-height: 1.6;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .card-pro::before { content: '✓'; color: #2a7a2a; flex-shrink: 0; font-weight: 700; }
+    .card-con::before { content: '→'; color: var(--accent); flex-shrink: 0; font-weight: 700; }
+
+    /* ── AGENT CARDS ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    @media (max-width: 620px) { .agent-grid { grid-template-columns: 1fr; } }
+
+    .agent-card {
+      background: var(--ink);
+      color: #fff;
+      padding: 28px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: -20px; right: -20px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      opacity: 0.06;
+      background: #fff;
+    }
+
+    .agent-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #6a9fd8;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .agent-card-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 14px;
+    }
+
+    .agent-card-desc {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.78);
+      font-weight: 300;
+    }
+
+    /* ── SOURCE CARDS ── */
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    @media (max-width: 640px) { .source-grid { grid-template-columns: 1fr 1fr; } }
+
+    .source-card {
+      border: 1px solid var(--rule);
+      padding: 18px 16px;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .source-card:hover {
+      border-color: var(--accent);
+      background: #f0f4ff;
+    }
+
+    .source-card-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+
+    .source-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+
+    .source-card-desc {
+      font-size: 12px;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    /* ── BLOCKQUOTE ── */
+    blockquote {
+      margin: 32px 0;
+      padding: 24px 28px;
+      background: var(--warm-mid);
+      border-left: 4px solid var(--accent);
+      font-style: italic;
+      color: var(--ink-light);
+      position: relative;
+    }
+
+    blockquote::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      color: var(--accent);
+      opacity: 0.15;
+      position: absolute;
+      top: -10px; left: 10px;
+      line-height: 1;
+    }
+
+    blockquote p { margin: 0; font-size: 1.05em; position: relative; }
+
+    /* ── CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82em;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--ink);
+      color: #fff;
+      padding: 36px 40px;
+      margin: 48px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .callout::after {
+      content: '⚖';
+      position: absolute;
+      right: 16px; bottom: -24px;
+      font-size: 8rem;
+      opacity: 0.04;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .callout-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6a9fd8;
+      margin-bottom: 12px;
+    }
+
+    .callout p {
+      font-size: 1.05em;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.88);
+      margin: 0;
+    }
+
+    .callout strong { color: #6a9fd8; }
+
+    /* ── INLINE CALLOUT ── */
+    .callout-inline {
+      border-left: 4px solid var(--accent);
+      background: #f0f4ff;
+      padding: 20px 24px;
+      margin: 28px 0;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    .callout-inline strong { color: var(--ink); font-style: normal; }
+
+    /* ── STAT STRIP ── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--rule);
+      margin: 40px 0;
+      overflow: hidden;
+    }
+
+    @media (max-width: 600px) { .stat-strip { grid-template-columns: 1fr 1fr; } }
+
+    .stat-item {
+      padding: 28px 20px;
+      border-right: 1px solid var(--rule);
+      text-align: center;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    /* ── TABLE ── */
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-size: 15px;
+    }
+
+    .params-table th {
+      background: var(--ink);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .params-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+
+    .params-table tr:nth-child(even) td { background: var(--warm-mid); }
+
+    .params-table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* ── CONCLUSION ── */
+    .conclusion {
+      border: 2px solid var(--ink);
+      padding: 40px;
+      margin-top: 64px;
+      position: relative;
+    }
+
+    .conclusion-label {
+      position: absolute;
+      top: -13px; left: 24px;
+      background: var(--bg);
+      padding: 0 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* ── ORNAMENT ── */
+    .ornament {
+      text-align: center;
+      margin: 48px 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+      opacity: 0.35;
+      user-select: none;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 48px 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 40px;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    footer strong {
+      color: #fff;
+      font-style: normal;
+    }
+
+    /* ── MASCOT HERO ── */
+    .mascot-hero {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 36px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .mascot-hero img {
+      height: 160px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .mascot-hero-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      border: none;
+      padding: 0;
+      margin: 0 0 8px 0;
+    }
+
+    .mascot-hero-text h2::before { display: none; }
+
+    .mascot-hero-text p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* ── INFOGRAPHIC ── */
+    .infographic-wrapper {
+      margin: 48px -40px;
+    }
+
+    .infographic-caption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .infographic-caption::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .infographic-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: #f0f4ff;
+      border: 1px solid rgba(26,58,124,0.2);
+      padding: 3px 9px;
+      flex-shrink: 0;
+    }
+
+    /* ── PRIVACY MATRIX ── */
+    .privacy-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-size: 14.5px;
+    }
+
+    .privacy-matrix th {
+      background: var(--ink);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .privacy-matrix td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: middle;
+      line-height: 1.55;
+    }
+
+    .privacy-matrix tr:nth-child(even) td { background: var(--warm-mid); }
+
+    .privacy-matrix td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .badge-save {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+
+    .badge-save.sim   { color: #2a7a2a; background: #f2faf2; border-color: rgba(42,122,42,0.25); }
+    .badge-save.nao   { color: #888; background: var(--warm-mid); border-color: var(--rule); }
+    .badge-save.opt   { color: var(--accent); background: #f0f4ff; border-color: rgba(26,58,124,0.25); }
+
+    /* ── SAVE GRID ── */
+    .save-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    @media (max-width: 600px) { .save-grid { grid-template-columns: 1fr; } }
+
+    .save-card {
+      border: 1px solid var(--rule);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .save-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .save-card.persiste::before  { background: #2a7a2a; }
+    .save-card.efemero::before   { background: var(--accent); }
+
+    .save-card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .save-card.persiste .save-card-tag { color: #2a7a2a; }
+    .save-card.efemero  .save-card-tag { color: var(--accent); }
+
+    .save-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .save-card-desc {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink-light);
+    }
+
+    .save-card ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .save-card ul li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink-light);
+      padding: 3px 0;
+      border-bottom: 1px dotted var(--rule);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .save-card ul li:last-child { border-bottom: none; }
+    .save-card.persiste ul li::before { content: '✓'; color: #2a7a2a; font-weight: 700; flex-shrink: 0; }
+    .save-card.efemero  ul li::before { content: '○'; color: var(--accent); flex-shrink: 0; }
+
+    /* ── SHIELD CALLOUT ── */
+    .callout-shield {
+      background: #0d2240;
+      color: #fff;
+      padding: 36px 40px;
+      margin: 48px 0;
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid #2a6bbe;
+    }
+
+    .callout-shield::after {
+      content: '🔒';
+      position: absolute;
+      right: 20px; bottom: -10px;
+      font-size: 6rem;
+      opacity: 0.07;
+      line-height: 1;
+    }
+
+    .callout-shield .callout-label { color: #6ab0e8; }
+
+    .callout-shield p {
+      font-size: 1.05em;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.88);
+      margin: 0;
+    }
+
+    .callout-shield strong { color: #6ab0e8; }
+
+    /* ── ORIGIN TIMELINE ── */
+    .origin-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+      margin: 36px 0 48px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @media (max-width: 620px) { .origin-strip { grid-template-columns: 1fr; } }
+
+    .origin-strip::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-3) 60%, rgba(26,58,124,0.15) 100%);
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @media (max-width: 620px) {
+      .origin-strip::before { display: none; }
+    }
+
+    .origin-node {
+      padding: 28px 22px;
+      border-right: 1px solid var(--rule);
+      background: #fff;
+      position: relative;
+      z-index: 1;
+      transition: background 0.2s;
+    }
+
+    .origin-node:last-child { border-right: none; }
+    .origin-node:hover { background: #f0f4ff; }
+
+    .origin-node::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .origin-node:nth-child(1)::before { opacity: 0.4; }
+    .origin-node:nth-child(2)::before { opacity: 0.7; }
+    .origin-node:nth-child(3)::before { opacity: 1.0; }
+
+    .origin-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .origin-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .origin-desc {
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.6;
+    }
+
+    /* ── VIDEO EMBED ── */
+    .video-embed {
+      margin: 40px 0;
+      border: 1px solid var(--rule);
+      overflow: hidden;
+    }
+
+    .video-caption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 14px 20px 10px;
+      background: var(--warm-mid);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .video-caption::before {
+      content: '▶';
+      font-size: 0.8em;
+      opacity: 0.7;
+    }
+
+    .video-caption .video-date {
+      color: var(--ink-light);
+      font-size: 10px;
+      margin-left: auto;
+    }
+
+    .video-responsive {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .video-responsive iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .header-inner, .article-body { padding-left: 24px; padding-right: 24px; }
+      nav.toc { padding-left: 24px; padding-right: 24px; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .callout { padding: 24px; }
+      .conclusion { padding: 28px; }
+      .infographic-wrapper { margin: 48px -24px; }
+      .infographic-caption { padding: 0 24px; }
+      .mascot-hero { flex-direction: column; text-align: center; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-noise"></div>
+  <div class="header-inner">
+    <div class="header-label">Inteligência Artificial &nbsp;·&nbsp; Direito &nbsp;·&nbsp; Gestão Jurídica &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LLM</div>
+
+    <div class="mascot-hero">
+      <img src="juria2.png" alt="Mascote JúrIA" onerror="this.style.display='none'" />
+      <div class="mascot-hero-text">
+        <h2>JúrIA</h2>
+        <p>Assistente Jurídico Inteligente do CAOJÚRI &nbsp;·&nbsp; Ministério Público do Maranhão</p>
+      </div>
+    </div>
+
+    <h1>Da Consulta à <em>Inteligência Jurídica</em> em Tempo Real</h1>
+    <p class="header-subtitle">Como o CAOJÚRI desenvolveu um assistente de IA capaz de responder a perguntas jurídicas complexas a partir de documentos reais, bases de dados do Notion, vídeos e muito mais — com arquitetura <em>stateless</em> por padrão, salvamento seletivo de pesquisas e múltiplos modelos de LLM sob demanda.</p>
+
+    <div class="header-logos">
+      <span class="header-logos-label">Tecnologias</span>
+      <div class="logo-badge">
+        <span class="badge-icon">🤖</span>
+        <div>
+          <div class="badge-text">LangChain</div>
+          <div class="badge-sub">Orquestração</div>
+        </div>
+      </div>
+      <div class="logo-sep"></div>
+      <div class="logo-badge">
+        <span class="badge-icon">⚡</span>
+        <div>
+          <div class="badge-text">Streamlit</div>
+          <div class="badge-sub">Interface</div>
+        </div>
+      </div>
+      <div class="logo-sep"></div>
+      <div class="logo-badge">
+        <span class="badge-icon">🧠</span>
+        <div>
+          <div class="badge-text">GPT · Claude · Gemini</div>
+          <div class="badge-sub">Modelos de LLM</div>
+        </div>
+      </div>
+      <div class="logo-sep"></div>
+      <div class="logo-badge">
+        <span class="badge-icon">📑</span>
+        <div>
+          <div class="badge-text">Notion · PDF · MP4</div>
+          <div class="badge-sub">Fontes de dados</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="byline">
+      <div class="byline-avatar">⚖️</div>
+      <div class="byline-text">
+        <strong>CAOJÚRI — Centro de Apoio Operacional do Júri</strong>
+        Ministério Público do Maranhão &nbsp;·&nbsp; Inovação e Tecnologia para o Sistema de Justiça
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── TABLE OF CONTENTS ── -->
+<nav class="toc" aria-label="Índice">
+  <h2>Índice</h2>
+  <ol>
+    <li><a href="#contexto">O Desafio: Informação Jurídica em Escala</a></li>
+    <li><a href="#o-que-e">O que é a JúrIA?</a></li>
+    <li><a href="#arquitetura">Arquitetura Técnica do Sistema</a></li>
+    <li><a href="#fontes">Fontes de Conhecimento Suportadas</a></li>
+    <li><a href="#modelos">Múltiplos Modelos de IA sob Demanda</a></li>
+    <li><a href="#rag">RAG: Como a JúrIA "Lê" Documentos Jurídicos</a></li>
+    <li><a href="#seguranca">Segurança, Privacidade e Controle de Dados</a></li>
+    <li><a href="#fluxo">Fluxo Completo de uma Consulta Jurídica</a></li>
+    <li><a href="#notion">Integração com o Banco de Dados do CAOJÚRI no Notion</a></li>
+    <li><a href="#impacto">Impacto Operacional e Métricas</a></li>
+    <li><a href="#conclusao">Conclusão e Próximos Passos</a></li>
+  </ol>
+</nav>
+
+<!-- ── ARTICLE BODY ── -->
+<article class="article-body">
+
+  <!-- INTRO -->
+  <p class="lead fade-in">
+    O trabalho do Ministério Público nos casos de Tribunal do Júri exige domínio rápido e preciso sobre um vasto acervo jurídico: pareceres, jurisprudências, teses, legislação, registros processuais e anotações técnicas acumuladas ao longo de anos. A busca manual por informações nesse universo consome tempo precioso e impõe limites práticos à capacidade de resposta dos promotores. A <strong>JúrIA</strong> nasce para quebrar essa barreira — idealizada em <strong>março de 2024</strong>, quando o CAOJÚRI criou seu primeiro fluxo de registro estruturado de consultas no Notion e percebeu o potencial das IAs generativas emergentes como aliadas do trabalho jurídico. Hoje, é um assistente inteligente que transforma qualquer documento, base de dados ou conteúdo audiovisual em fonte de consulta conversacional, disponível 24 horas por dia, com a precisão e o contexto que o trabalho do CAOJÚRI exige.
+  </p>
+
+  <!-- ── SEÇÃO 1 ── -->
+  <h2 id="contexto" data-num="01 — Contexto" class="fade-in">O Desafio: Informação Jurídica em Escala</h2>
+
+  <p class="fade-in">O <strong>CAOJÚRI</strong> — Centro de Apoio Operacional do Júri do Ministério Público do Maranhão — acumula continuamente uma base de conhecimento jurídico especializado: teses de acusação e defesa, pareceres sobre nulidades, orientações procedimentais, registros de casos paradigmáticos e materiais de capacitação. Esse acervo cresce a cada novo caso julgado, a cada capacitação realizada, a cada orientação emitida.</p>
+
+  <p class="fade-in">O problema não é a falta de informação — é a dificuldade de acessá-la quando necessário. Um promotor preparando-se para uma sessão de júri precisa encontrar rapidamente a tese mais recente sobre legítima defesa putativa, ou verificar como o CAOJÚRI orientou a abordagem de determinada nulidade processual. Ferramentas de busca convencionais são lentas, exigem terminologia exata e não compreendem o contexto da pergunta.</p>
+
+  <blockquote class="fade-in">
+    <p>Como transformar o conhecimento acumulado pelo CAOJÚRI em um recurso consultável em linguagem natural, disponível instantaneamente para qualquer membro do Ministério Público?</p>
+  </blockquote>
+
+  <p class="fade-in">A resposta é a JúrIA — um sistema RAG (Retrieval-Augmented Generation) construído sobre os melhores modelos de linguagem disponíveis, integrado às fontes de conhecimento reais do CAOJÚRI e acessível por uma interface conversacional simples e intuitiva.</p>
+
+  <h3>A Origem: Março de 2024</h3>
+
+  <p class="fade-in">A JúrIA não surgiu de um projeto de TI executado do zero — ela emergiu de uma percepção prática do CAOJÚRI. Em <strong>março de 2024</strong>, a equipe criou no Notion um fluxo estruturado de registro de consultas jurídicas: um banco de dados onde orientações, teses e pareceres passaram a ser catalogados sistematicamente, com data, tema, tipo de delito e conteúdo completo. Esse gesto — aparentemente operacional — foi, na verdade, o primeiro passo de uma estratégia de memória institucional.</p>
+
+  <p class="fade-in">Naquele mesmo período, os modelos de linguagem generativa davam saltos notáveis. O GPT-4 já demonstrava capacidade de raciocínio jurídico sofisticado; a Anthropic lançava versões progressivamente mais capazes do Claude; o Google avançava com o Gemini. A questão que se impôs naturalmente foi: <em>e se o conhecimento que estamos registrando no Notion pudesse ser consultado conversacionalmente, em linguagem natural, por qualquer promotor de qualquer comarca?</em> A JúrIA foi a resposta.</p>
+
+  <div class="origin-strip fade-in">
+    <div class="origin-node">
+      <span class="origin-date">Março · 2024</span>
+      <div class="origin-title">Semente da Ideia</div>
+      <div class="origin-desc">Criação do fluxo de registro de consultas jurídicas no Notion. Catalogação sistemática de orientações, teses e pareceres do CAOJÚRI começa a construir a base do conhecimento institucional.</div>
+    </div>
+    <div class="origin-node">
+      <span class="origin-date">Mid · 2024</span>
+      <div class="origin-title">Desenvolvimento e Integração</div>
+      <div class="origin-desc">Construção da arquitetura com LangChain e Streamlit. Integração dos primeiros loaders (PDF, Site, YouTube) e conexão direta com a API do Notion para consulta à base acumulada.</div>
+    </div>
+    <div class="origin-node">
+      <span class="origin-date">Dezembro · 2024</span>
+      <div class="origin-title">JúrIA em Operação</div>
+      <div class="origin-desc">Sistema em funcionamento com suporte a múltiplos provedores de LLM, oito tipos de fonte de dados, arquitetura stateless e primeira demonstração pública do assistente em uso real.</div>
+    </div>
+  </div>
+
+  <div class="callout-inline fade-in">
+    O Notion não foi apenas uma plataforma de armazenamento — foi o <strong>catalisador da JúrIA</strong>. Ao disciplinar o registro do conhecimento em formato estruturado, o CAOJÚRI criou involuntariamente a matéria-prima perfeita para um sistema de IA conversacional: informação contextualizada, categorizada e recuperável por API.
+  </div>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 2 ── -->
+  <h2 id="o-que-e" data-num="02 — O que é" class="fade-in">O que é a JúrIA?</h2>
+
+  <p class="fade-in">A JúrIA é um <strong>assistente de inteligência artificial jurídica</strong> desenvolvido pelo CAOJÚRI com tecnologia de ponta. Não se trata de um chatbot genérico — é um sistema especializado que combina a capacidade linguística dos maiores modelos de linguagem do mundo com o conhecimento específico do acervo do CAOJÚRI.</p>
+
+  <div class="stat-strip fade-in">
+    <div class="stat-item">
+      <span class="stat-value" style="font-size:2rem;">Mar·24</span>
+      <span class="stat-label">Idealizada no<br>Notion / CAOJÚRI</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">3</span>
+      <span class="stat-label">Provedores de LLM<br>integrados</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">8</span>
+      <span class="stat-label">Tipos de fontes<br>de dados</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">24/7</span>
+      <span class="stat-label">Disponibilidade<br>de consulta</span>
+    </div>
+  </div>
+
+  <p class="fade-in">Em termos práticos, a JúrIA permite que um promotor carregue um PDF de uma denúncia, um CSV com dados de processos ou uma gravação em vídeo de uma capacitação, e passe a <strong>conversar com esse conteúdo</strong> como se estivesse dialogando com um especialista que leu e compreendeu integralmente o material. O sistema mantém o histórico da conversa, permitindo perguntas de acompanhamento e refinamentos progressivos da consulta.</p>
+
+  <div class="callout fade-in">
+    <div class="callout-label">Diferencial Estratégico</div>
+    <p>A JúrIA não substitui o promotor — ela <strong>amplifica sua capacidade</strong>. Ao automatizar a recuperação e síntese de informação, libera o profissional para concentrar sua energia onde importa: na estratégia processual, na argumentação jurídica e na condução da sessão de julgamento.</p>
+  </div>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 3 ── -->
+  <h2 id="arquitetura" data-num="03 — Arquitetura" class="fade-in">Arquitetura Técnica do Sistema</h2>
+
+  <p class="fade-in">A JúrIA é construída sobre uma arquitetura em quatro camadas, cada uma com responsabilidades bem definidas. A modularidade do design permite que componentes sejam atualizados ou substituídos sem impactar o funcionamento geral do sistema.</p>
+
+  <div class="layers-grid fade-in">
+    <div class="layer-card">
+      <span class="layer-icon">🖥️</span>
+      <span class="layer-tag">Camada 1</span>
+      <div class="layer-title">Interface</div>
+      <div class="layer-desc">Streamlit. Interface web responsiva com chat, sidebar de configuração e painel de estatísticas de acesso.</div>
+    </div>
+    <div class="layer-card">
+      <span class="layer-icon">🔗</span>
+      <span class="layer-tag">Camada 2</span>
+      <div class="layer-title">Orquestração</div>
+      <div class="layer-desc">LangChain + ChatPromptTemplate. Gerencia o fluxo entre loaders, memória de conversa e chamadas ao LLM.</div>
+    </div>
+    <div class="layer-card">
+      <span class="layer-icon">🧠</span>
+      <span class="layer-tag">Camada 3</span>
+      <div class="layer-title">Inteligência</div>
+      <div class="layer-desc">OpenAI GPT, Anthropic Claude ou Google Gemini — selecionável em tempo real, conforme necessidade.</div>
+    </div>
+    <div class="layer-card">
+      <span class="layer-icon">📂</span>
+      <span class="layer-tag">Camada 4</span>
+      <div class="layer-title">Dados</div>
+      <div class="layer-desc">Loaders especializados para PDF, CSV, TXT, Site, YouTube, MP4, Notion e Google Drive.</div>
+    </div>
+  </div>
+
+  <h3>Memória Conversacional</h3>
+
+  <p class="fade-in">Um dos diferenciais críticos da JúrIA é o suporte a <strong>memória de conversa persistente</strong>, implementado via <code>ConversationBufferMemory</code> do LangChain. Isso significa que a JúrIA não apenas responde perguntas isoladas — ela acompanha o raciocínio ao longo de toda a sessão, compreendendo referências a respostas anteriores e refinamentos progressivos da consulta.</p>
+
+  <p class="fade-in">A memória é injetada no contexto de cada nova mensagem através de um template estruturado com três componentes: a instrução de sistema com o documento carregado, o histórico de conversa e a nova mensagem do usuário. Para o modelo, cada turno é uma conversa completa com contexto integral.</p>
+
+  <div class="callout-inline fade-in">
+    Essa abordagem é <strong>especialmente valiosa no contexto jurídico</strong>, onde uma análise evolui progressivamente — primeiro uma pergunta geral sobre o caso, depois aprofundamentos em pontos específicos, depois comparações com outros precedentes, tudo sem perder o fio condutor da consulta.
+  </div>
+
+  <h3>Painel de Estatísticas e Auditoria</h3>
+
+  <p class="fade-in">O sistema registra automaticamente cada acesso em um banco <code>SQLite</code> local, permitindo ao CAOJÚRI monitorar visitantes únicos, total de page views, acessos por dia e tendências semanais. Esse painel está disponível diretamente na interface, sem necessidade de ferramentas externas, garantindo visibilidade sobre a adoção e o uso da ferramenta.</p>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 4 ── -->
+  <h2 id="fontes" data-num="04 — Fontes" class="fade-in">Fontes de Conhecimento Suportadas</h2>
+
+  <p class="fade-in">A JúrIA suporta oito tipos distintos de fonte de dados, cobrindo praticamente todas as formas em que o conhecimento jurídico existe hoje — de documentos formais a conteúdo audiovisual e bases de dados colaborativas.</p>
+
+  <div class="source-grid fade-in">
+    <div class="source-card">
+      <span class="source-card-icon">📄</span>
+      <div class="source-card-title">PDF</div>
+      <div class="source-card-desc">Petições, pareceres, acórdãos, legislação — qualquer documento em PDF</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">🌐</span>
+      <div class="source-card-title">Site</div>
+      <div class="source-card-desc">Páginas web, portais jurídicos, repositórios de jurisprudência</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">▶️</span>
+      <div class="source-card-title">YouTube</div>
+      <div class="source-card-desc">Transcrição automática de vídeos — capacitações, palestras, audiências</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">📊</span>
+      <div class="source-card-title">CSV</div>
+      <div class="source-card-desc">Bases de dados tabulares, relatórios estatísticos, registros processuais</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">📝</span>
+      <div class="source-card-title">TXT</div>
+      <div class="source-card-desc">Notas técnicas, ementas, orientações em texto simples</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">🎥</span>
+      <div class="source-card-title">MP4</div>
+      <div class="source-card-desc">Vídeos locais transcritos automaticamente, com exportação em .srt e .txt</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">📋</span>
+      <div class="source-card-title">Notion</div>
+      <div class="source-card-desc">Base de conhecimento centralizada do CAOJÚRI com paginação completa</div>
+    </div>
+    <div class="source-card">
+      <span class="source-card-icon">☁️</span>
+      <div class="source-card-title">Google Drive</div>
+      <div class="source-card-desc">Documentos armazenados na nuvem, com detecção automática de tipo</div>
+    </div>
+  </div>
+
+  <h3>Transcrição Automática de Áudio e Vídeo</h3>
+
+  <p class="fade-in">Um recurso particularmente poderoso da JúrIA é a capacidade de <strong>transcrever automaticamente conteúdo audiovisual</strong>. Ao carregar um arquivo MP4 ou informar uma URL do YouTube, o sistema extrai o áudio, divide-o em segmentos de 60 segundos, e utiliza o reconhecimento de fala do Google para produzir uma transcrição completa em português — que pode então ser consultada conversacionalmente, ou exportada em formatos <code>.txt</code> ou <code>.srt</code> (legendas) para uso posterior.</p>
+
+  <p class="fade-in">Isso é especialmente relevante para o CAOJÚRI ao lidar com gravações de capacitações, seminários jurídicos, ou mesmo vídeos de plenário do júri que precisam ser analisados e referenciados.</p>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 5 ── -->
+  <h2 id="modelos" data-num="05 — Modelos" class="fade-in">Múltiplos Modelos de IA sob Demanda</h2>
+
+  <p class="fade-in">A JúrIA não está vinculada a um único modelo de inteligência artificial. O sistema oferece acesso aos <strong>três principais ecossistemas de LLM</strong> do mercado, com seleção em tempo real a partir da interface:</p>
+
+  <div class="tech-grid fade-in">
+    <div class="tech-card openai">
+      <span class="card-tag">OpenAI</span>
+      <div class="card-title">GPT-4.1 &amp; Variantes</div>
+      <hr class="card-divider">
+      <div class="card-pro">GPT-4.1-nano (velocidade)</div>
+      <div class="card-pro">GPT-4.1-mini (equilíbrio)</div>
+      <div class="card-pro">GPT-4.1 (máxima capacidade)</div>
+      <hr class="card-divider">
+      <div class="card-desc">Líder em raciocínio e seguimento de instruções complexas. Ideal para análises jurídicas detalhadas.</div>
+    </div>
+    <div class="tech-card anthropic">
+      <span class="card-tag">Anthropic</span>
+      <div class="card-title">Claude 3.5 &amp; 4</div>
+      <hr class="card-divider">
+      <div class="card-pro">Claude 3.5 Haiku (rápido)</div>
+      <div class="card-pro">Claude Sonnet 4 (avançado)</div>
+      <div class="card-con">Foco em segurança e precisão</div>
+      <hr class="card-divider">
+      <div class="card-desc">Excelente em síntese de documentos longos e produção de texto jurídico coerente e estruturado.</div>
+    </div>
+    <div class="tech-card google">
+      <span class="card-tag">Google</span>
+      <div class="card-title">Gemini 2.5</div>
+      <hr class="card-divider">
+      <div class="card-pro">Gemini 2.5 Flash (eficiente)</div>
+      <div class="card-pro">Gemini 2.5 Flash Lite</div>
+      <div class="card-pro">Gemini 2.5 Pro (topo)</div>
+      <hr class="card-divider">
+      <div class="card-desc">Janela de contexto extensa. Particularmente eficaz para documentos jurídicos muito longos.</div>
+    </div>
+  </div>
+
+  <p class="fade-in">A flexibilidade na escolha do modelo é estrategicamente importante. Diferentes tarefas podem exigir diferentes capacidades — uma pesquisa rápida de jurisprudência pode ser tratada por um modelo menor e mais ágil, enquanto a análise de uma peça processual complexa pode demandar o modelo mais capaz disponível. O usuário escolhe conforme a necessidade e o orçamento disponível.</p>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 6 ── -->
+  <h2 id="rag" data-num="06 — RAG" class="fade-in">RAG: Como a JúrIA "Lê" Documentos Jurídicos</h2>
+
+  <p class="fade-in">O coração técnico da JúrIA é o padrão <strong>RAG — Retrieval-Augmented Generation</strong>. Trata-se de uma abordagem que combina dois processos: a recuperação de informação relevante de uma base de conhecimento (retrieval) e a geração de respostas coerentes a partir dessa informação (generation).</p>
+
+  <h3>O Problema dos LLMs sem Contexto</h3>
+
+  <p class="fade-in">Modelos de linguagem como GPT e Claude são treinados em dados até uma determinada data de corte. Eles não têm acesso ao acervo específico do CAOJÚRI, às orientações internas mais recentes, ao banco de dados de processos, ou a qualquer documento particular que não fizesse parte de seu treinamento. Para que um LLM responda com precisão sobre conteúdo específico, é necessário fornecer esse conteúdo diretamente em seu contexto.</p>
+
+  <p class="fade-in">A JúrIA resolve isso carregando o conteúdo do documento selecionado e injetando-o no prompt do sistema a cada consulta. O LLM recebe explicitamente: "Você é a JúrIA. As informações a seguir vêm do documento X. Utilize-as para responder."</p>
+
+  <div class="agent-grid fade-in">
+    <div class="agent-card">
+      <div class="agent-card-name">01</div>
+      <div class="agent-card-sub">Carregamento</div>
+      <div class="agent-card-desc">O documento (PDF, site, Notion, MP4...) é carregado pelo loader especializado e convertido em texto estruturado.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-card-name">02</div>
+      <div class="agent-card-sub">Injeção de Contexto</div>
+      <div class="agent-card-desc">O texto do documento é inserido no prompt do sistema. O LLM recebe as instruções de persona e o conteúdo como base obrigatória de suas respostas.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-card-name">03</div>
+      <div class="agent-card-sub">Geração Guiada</div>
+      <div class="agent-card-desc">O modelo responde baseando-se no documento fornecido, com memória do histórico da conversa, produzindo respostas contextualizadas e verificáveis.</div>
+    </div>
+  </div>
+
+  <div class="callout fade-in">
+    <div class="callout-label">Rastreabilidade Jurídica</div>
+    <p>Como o LLM baseia suas respostas no documento explicitamente fornecido, o operador do direito tem condições de <strong>verificar e rastrear</strong> as afirmações feitas pela JúrIA — um requisito essencial em contextos jurídicos onde a precisão da fonte importa tanto quanto a informação em si.</p>
+  </div>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 7 — SEGURANÇA E PRIVACIDADE ── -->
+  <h2 id="seguranca" data-num="07 — Segurança &amp; Privacidade" class="fade-in">Segurança, Privacidade e Controle de Dados</h2>
+
+  <p class="fade-in">O contexto de atuação da JúrIA exige rigor máximo no tratamento da informação. Promotores de Justiça lidam diariamente com dados sensíveis — investigações em curso, peças processuais sigilosas, orientações estratégicas que não podem ser expostas. Por isso, a arquitetura de privacidade da JúrIA foi concebida com um princípio fundamental: <strong>o menor rastro possível, pelo menor tempo necessário</strong>.</p>
+
+  <h3>Arquitetura Stateless por Padrão</h3>
+
+  <p class="fade-in">A JúrIA opera, por padrão, em modo completamente <em>stateless</em> — sem estado persistente. Isso significa que, ao encerrar uma sessão ou limpar o histórico, <strong>nenhum dado da conversa ou do documento carregado é retido pelo sistema</strong>. O conteúdo existe apenas na memória volátil da sessão ativa, sendo descartado automaticamente ao seu término.</p>
+
+  <p class="fade-in">Esse modelo é uma decisão de arquitetura deliberada, especialmente relevante em ambientes jurídicos onde a confidencialidade é requisito, não opção. A abordagem stateless traz três garantias práticas para o usuário:</p>
+
+  <div class="agent-grid fade-in">
+    <div class="agent-card">
+      <div class="agent-card-name">🔒</div>
+      <div class="agent-card-sub">Sem Persistência</div>
+      <div class="agent-card-desc">Documentos carregados, perguntas feitas e respostas recebidas não são gravados em banco de dados após o encerramento da sessão.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-card-name">🚫</div>
+      <div class="agent-card-sub">Sem Treinamento</div>
+      <div class="agent-card-desc">As interações na JúrIA não são usadas para treinar ou ajustar os modelos de IA subjacentes. O conteúdo carregado não alimenta bases de terceiros.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-card-name">🧹</div>
+      <div class="agent-card-sub">Limpeza Voluntária</div>
+      <div class="agent-card-desc">O botão "Limpar histórico de conversação" apaga instantaneamente toda a memória da sessão, sem rastros residuais no sistema.</div>
+    </div>
+  </div>
+
+  <div class="callout-shield fade-in">
+    <div class="callout-label">Princípio de Privacidade</div>
+    <p>Em cada sessão da JúrIA, o documento carregado e as perguntas realizadas existem <strong>exclusivamente no contexto daquela janela de trabalho</strong>. Ao encerrar a sessão, a memória é zerada. Nenhuma peça processual, nenhuma orientação estratégica e nenhuma pergunta do promotor persiste no sistema além do tempo de uso.</p>
+  </div>
+
+  <h3>O que a JúrIA Salva — e o que Não Salva</h3>
+
+  <p class="fade-in">A distinção entre o que é registrado e o que permanece efêmero é central para compreender o modelo de privacidade do sistema. A JúrIA aplica um critério objetivo: <strong>somente dados operacionais agregados e anônimos são persistidos</strong> — nunca conteúdo jurídico ou pessoal.</p>
+
+  <div class="save-grid fade-in">
+    <div class="save-card persiste">
+      <span class="save-card-tag">✓ Persiste no Sistema</span>
+      <div class="save-card-title">Dados Operacionais Anônimos</div>
+      <ul>
+        <li>Contagem de sessões únicas (UUID anônimo)</li>
+        <li>Timestamp dos acessos (data/hora)</li>
+        <li>Total de page views</li>
+        <li>Estatísticas diárias agregadas</li>
+      </ul>
+    </div>
+    <div class="save-card efemero">
+      <span class="save-card-tag">○ Efêmero — Não Persiste</span>
+      <div class="save-card-title">Conteúdo da Consulta</div>
+      <ul>
+        <li>Documentos carregados (PDF, CSV, TXT...)</li>
+        <li>Perguntas e respostas da conversa</li>
+        <li>Transcrições geradas de vídeos/áudios</li>
+        <li>Conteúdo extraído de Notion e Google Drive</li>
+        <li>Chaves de API fornecidas pelo usuário</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Salvamento Opcional de Pesquisas — por Tipo de Fonte</h3>
+
+  <p class="fade-in">Embora o padrão seja a não persistência, o sistema oferece ao usuário a possibilidade de <strong>salvar o resultado de pesquisas específicas</strong> quando isso agrega valor operacional. Esse recurso é seletivo e controlado: disponível apenas para os tipos de entrada onde a geração de um artefato externo faz sentido prático.</p>
+
+  <p class="fade-in">A tabela a seguir mapeia cada fonte de dados suportada pela JúrIA e indica a disponibilidade, o mecanismo e o formato de salvamento:</p>
+
+  <table class="privacy-matrix fade-in">
+    <thead>
+      <tr>
+        <th>Fonte de Dados</th>
+        <th>Salvamento Disponível</th>
+        <th>Mecanismo</th>
+        <th>Formato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Arquivos .mp4</td>
+        <td><span class="badge-save sim">Sim</span></td>
+        <td>Após transcrição automática, link de download gerado em tela</td>
+        <td><code>.txt</code> / <code>.srt</code></td>
+      </tr>
+      <tr>
+        <td>YouTube</td>
+        <td><span class="badge-save sim">Sim</span></td>
+        <td>Transcrição do áudio do vídeo disponível para download</td>
+        <td><code>.txt</code> / <code>.srt</code></td>
+      </tr>
+      <tr>
+        <td>Google Drive (MP4)</td>
+        <td><span class="badge-save sim">Sim</span></td>
+        <td>Transcrição gerada após download e processamento do arquivo</td>
+        <td><code>.txt</code> / <code>.srt</code></td>
+      </tr>
+      <tr>
+        <td>Arquivos .pdf</td>
+        <td><span class="badge-save nao">Não</span></td>
+        <td>Conteúdo carregado em memória, sem exportação de resultado</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Arquivos .csv</td>
+        <td><span class="badge-save nao">Não</span></td>
+        <td>Dados lidos em sessão; consulta via chat</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Arquivos .txt</td>
+        <td><span class="badge-save nao">Não</span></td>
+        <td>Conteúdo efêmero, utilizado apenas na sessão ativa</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Site</td>
+        <td><span class="badge-save nao">Não</span></td>
+        <td>Conteúdo da página carregado em memória volátil</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Notion</td>
+        <td><span class="badge-save nao">Não</span></td>
+        <td>Dados recuperados via API; consultados sem persistência local</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout-inline fade-in">
+    <strong>Por que transcrições de vídeo são as únicas com salvamento?</strong> Porque a transcrição de áudio é um processo computacionalmente custoso e um produto de trabalho autônomo — independente do conteúdo da conversa com a JúrIA. O usuário pode querer utilizar essa transcrição em outros contextos (editor de texto, sistema processual, sistema de legendas). Nos demais tipos de fonte, a informação carregada é apenas o meio para a consulta, não o produto final.
+  </div>
+
+  <h3>Chaves de API e Dados de Autenticação</h3>
+
+  <p class="fade-in">A JúrIA opera com as chaves de API fornecidas pelo próprio usuário — não armazena, não transmite e não registra essas credenciais em nenhum banco de dados local. As chaves existem apenas no <code>st.session_state</code> do Streamlit, uma estrutura de memória volátil vinculada à sessão ativa do navegador. Ao fechar a aba ou encerrar a sessão, as credenciais são descartadas automaticamente.</p>
+
+  <p class="fade-in">Isso coloca o controle total de custo e acesso nas mãos do usuário: ele utiliza sua própria conta no provedor de IA, tem visibilidade direta sobre o uso e pode revogar o acesso a qualquer momento pelo painel do provedor, sem qualquer dependência da JúrIA.</p>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 8 ── -->
+  <h2 id="fluxo" data-num="08 — Fluxo" class="fade-in">Fluxo Completo de uma Consulta Jurídica</h2>
+
+  <p class="fade-in">Para tornar a arquitetura concreta, o caminho completo de uma consulta típica — por exemplo, um promotor analisando uma peça processual em PDF:</p>
+
+  <ol class="flow-steps fade-in">
+    <li>O promotor acessa a JúrIA pela interface Streamlit e seleciona o provedor e modelo de IA preferido na aba "Modelo de IA" da barra lateral.</li>
+    <li>Insere sua chave de API do modelo escolhido. A JúrIA confirma com orientação para prosseguir à aba de dados.</li>
+    <li>Na aba "RAG de dados", seleciona "Arquivos .pdf" e faz o upload do documento — pode ser uma denúncia, um acórdão ou qualquer peça processual.</li>
+    <li>Clica em "Iniciar o Assistente". O loader PyPDF extrai o conteúdo completo do PDF e o injeta no prompt do sistema junto com a persona da JúrIA.</li>
+    <li>A interface de chat é liberada. O promotor digita sua primeira pergunta: <em>"Quais são os principais pontos de vulnerabilidade desta denúncia?"</em></li>
+    <li>O LLM processa a pergunta com o contexto completo do documento e responde com análise fundamentada no texto da peça.</li>
+    <li>O promotor faz perguntas de acompanhamento. A <code>ConversationBufferMemory</code> mantém o histórico, permitindo perguntas como <em>"Aprofunde o segundo ponto que você mencionou."</em></li>
+    <li>Ao final, o promotor pode limpar o histórico e iniciar uma nova sessão com um documento diferente, mantendo a mesma configuração de modelo.</li>
+  </ol>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 9 ── -->
+  <h2 id="notion" data-num="09 — Notion" class="fade-in">Integração com o Banco de Dados do CAOJÚRI no Notion</h2>
+
+  <p class="fade-in">Uma das integrações mais estratégicas da JúrIA é com o <strong>Notion</strong> — a plataforma que o CAOJÚRI utiliza como repositório central de conhecimento institucional. Através da API oficial do Notion, a JúrIA acessa tanto páginas individuais quanto bancos de dados completos com paginação automática.</p>
+
+  <p class="fade-in">A integração suporta todas as principais estruturas de conteúdo do Notion — parágrafos, títulos, listas, citações, callouts, além de propriedades de banco de dados como texto, número, seleção, multi-seleção, datas, checkboxes e texto enriquecido. O sistema percorre automaticamente todas as entradas disponíveis, independentemente do volume, usando o mecanismo de cursor do Notion para paginação.</p>
+
+  <table class="params-table fade-in">
+    <thead>
+      <tr>
+        <th>Tipo de Propriedade Notion</th>
+        <th>Suporte na JúrIA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>title</td>
+        <td>Extração completa do título de cada entrada do banco de dados</td>
+      </tr>
+      <tr>
+        <td>rich_text</td>
+        <td>Texto formatado extraído como texto plano para processamento pelo LLM</td>
+      </tr>
+      <tr>
+        <td>select / multi_select</td>
+        <td>Valores de seleção única e múltipla, com nomes legíveis</td>
+      </tr>
+      <tr>
+        <td>date</td>
+        <td>Datas com suporte a intervalos (início e fim)</td>
+      </tr>
+      <tr>
+        <td>checkbox</td>
+        <td>Valores booleanos convertidos para "Sim" / "Não"</td>
+      </tr>
+      <tr>
+        <td>number</td>
+        <td>Valores numéricos preservados com precisão</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">A configuração da integração é simplificada ao máximo: as credenciais (chave de API e ID da página ou banco de dados) são definidas uma única vez no arquivo <code>.env</code> da aplicação. O promotor simplesmente seleciona "Notion" no menu e clica em iniciar — a JúrIA recupera automaticamente todo o conteúdo disponível e está pronta para responder consultas sobre a base institucional do CAOJÚRI.</p>
+
+  <div class="callout-inline fade-in">
+    <strong>Caso de uso concreto:</strong> O CAOJÚRI mantém no Notion um banco de dados de orientações sobre teses de acusação em casos de crimes dolosos contra a vida. Com a integração da JúrIA, um promotor pode perguntar diretamente: <em>"Qual é a orientação do CAOJÚRI para a abordagem de legítima defesa em casos de violência doméstica?"</em> — e receber a resposta fundamentada no conteúdo institucional atualizado.
+  </div>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 10 ── -->
+  <h2 id="impacto" data-num="10 — Impacto" class="fade-in">Impacto Operacional e Métricas</h2>
+
+  <p class="fade-in">A JúrIA representa uma mudança qualitativa significativa na forma como o CAOJÚRI apoia o trabalho dos promotores. Os impactos mais relevantes podem ser organizados em três dimensões:</p>
+
+  <h3>Velocidade de Acesso à Informação</h3>
+
+  <p class="fade-in">O que antes exigia uma busca manual em documentos físicos ou digitais, cruzamento de referências e consulta a colegas, passa a ser resolvido em segundos. Um promotor que precisa verificar como o CAOJÚRI orientou a abordagem de determinada nulidade obtém a resposta imediatamente — com a citação das partes relevantes do documento de origem.</p>
+
+  <h3>Democratização do Conhecimento Especializado</h3>
+
+  <p class="fade-in">Não é apenas a equipe mais experiente que tem acesso ao conhecimento acumulado — qualquer membro do Ministério Público com acesso à JúrIA pode consultar a base institucional com a mesma profundidade. Isso é especialmente relevante para promotores em início de carreira ou atuando em comarcas do interior.</p>
+
+  <h3>Preservação do Conhecimento Institucional</h3>
+
+  <p class="fade-in">Quando membros experientes se aposentam ou são redistribuídos, o conhecimento que carregam consigo frequentemente se perde. A JúrIA — alimentada pelo banco de dados do Notion — funciona como um mecanismo de <strong>memória institucional ativa</strong>: o conhecimento documentado permanece acessível e consultável independentemente das mudanças na equipe.</p>
+
+  <div class="stat-strip fade-in">
+    <div class="stat-item">
+      <span class="stat-value">0</span>
+      <span class="stat-label">Segundos para<br>iniciar uma consulta</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">∞</span>
+      <span class="stat-label">Documentos<br>consultáveis</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">PT</span>
+      <span class="stat-label">Linguagem natural<br>em português</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">↑</span>
+      <span class="stat-label">Acervo crescendo<br>continuamente</span>
+    </div>
+  </div>
+
+  <div class="ornament fade-in">— ✦ —</div>
+
+  <!-- ── SEÇÃO 11 ── -->
+  <h2 id="conclusao" data-num="11 — Conclusão" class="fade-in">Conclusão e Próximos Passos</h2>
+
+  <div class="conclusion fade-in">
+    <div class="conclusion-label">Síntese</div>
+    <p>A JúrIA representa um passo concreto e ambicioso do CAOJÚRI em direção a um Ministério Público tecnologicamente avançado. Nascida em março de 2024 a partir de uma decisão simples — registrar sistematicamente o conhecimento institucional no Notion —, evoluiu em poucos meses para um assistente de IA completo, tirando proveito dos avanços acelerados dos modelos generativos naquele período. Ao combinar os melhores LLMs disponíveis com o acervo do CAOJÚRI e uma arquitetura de privacidade rigorosa, <em>stateless</em> por padrão, o sistema transforma a forma como promotores acessam, sintetizam e aplicam informação jurídica no contexto do Tribunal do Júri.</p>
+    <br>
+    <p>O design modular da JúrIA foi pensado para evoluir. Os próximos passos incluem a implementação de busca semântica com embeddings vetoriais para permitir consultas por similaridade em grandes acervos — expandindo as capacidades de RAG além da injeção direta de conteúdo; a integração com sistemas processuais internos do MPMA para enriquecer automaticamente a base de conhecimento com dados de processos em andamento; e a criação de perfis de acesso diferenciados com controles de privacidade granulares, permitindo que a JúrIA seja configurada com bases de conhecimento específicas para diferentes promotorias e naturezas de atuação, sempre respeitando o princípio de menor privilégio no acesso a informações sensíveis.</p>
+    <br>
+    <p>A inteligência artificial não elimina a expertise jurídica — ela a potencializa. E o faz com responsabilidade: a JúrIA é um instrumento que coloca nas mãos do promotor um aliado sempre disponível, profundamente informado sobre o acervo institucional, capaz de dialogar em linguagem natural sobre os casos mais complexos do sistema de justiça — e que respeita a confidencialidade que o trabalho do Ministério Público exige. O CAOJÚRI continua sendo referência em Tribunal do Júri — agora, também em inovação tecnológica responsável para o Ministério Público.</p>
+  </div>
+
+  <p class="fade-in" style="margin-top: 48px;">Em dezembro de 2024, o CAOJÚRI registrou e publicou <strong><em>JúrIA — Assistente Jurídico do CAOJÚRI (demonstração)</em></strong> — um vídeo que documenta o primeiro ciclo completo da ferramenta, desde sua idealização no Notion até a interface conversacional com múltiplos modelos de IA. O vídeo a seguir ilustra o assistente em uso real, com carregamento de documentos, consultas em linguagem natural e respostas fundamentadas no acervo jurídico institucional:</p>
+
+  <div class="video-embed fade-in">
+    <div class="video-caption">
+      JúrIA — Assistente Jurídico do CAOJÚRI (demonstração)
+      <span class="video-date">Dezembro · 2024 &nbsp;·&nbsp; CAOJÚRI / MPMA</span>
+    </div>
+    <div class="video-responsive">
+      <iframe
+        src="https://www.youtube.com/embed/M1UQNNVJTxo"
+        title="JúrIA — Assistente Jurídico do CAOJÚRI (demonstração) · Dezembro de 2024"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <div class="callout-inline fade-in">
+    O vídeo de dezembro de 2024 encerra o primeiro ciclo da JúrIA — da ideia ao produto — e abre o segundo: o da adoção, do refinamento contínuo e da expansão para novos fluxos de trabalho do Ministério Público. <strong>O ponto de partida foi o Notion. O destino é o Ministério Público mais bem equipado do Brasil.</strong>
+  </div>
+
+</article>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>JúrIA</strong> &nbsp;·&nbsp; Assistente Jurídico Inteligente do CAOJÚRI &nbsp;·&nbsp; Ministério Público do Maranhão<br>
+  <span style="font-size:12px; margin-top:8px; display:block;">Tecnologia: LangChain · Streamlit · OpenAI · Anthropic · Google Gemini · Notion API</span>
+</footer>
+
+<script>
+  // ── PROGRESS BAR ──
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // ── FADE-IN ON SCROLL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
